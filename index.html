@@ -1,0 +1,633 @@
+<!doctype html>
+<html
+  lang="id"
+  class="dark scroll-smooth"
+  data-theme="dark"
+  style="color-scheme: only dark; background:#09090b;"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#09090b" />
+  <meta
+    name="description"
+    content="ruangdzikir.com — ruang digital yang tenang untuk jadwal sholat, membaca Al-Quran, belajar huruf hijaiyah, Asmaul Husna, arah kiblat, dan berdzikir."
+  />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none';"
+  />
+  <meta name="color-scheme" content="dark" />
+  <meta name="supported-color-schemes" content="dark" />
+  <title>ruangdzikir.com — Dzikir, Quran & Jadwal Sholat</title>
+
+  <script>
+    // Hard-lock the site to dark mode. Never follow OS/browser theme.
+    (() => {
+      const root = document.documentElement;
+      const forceDark = () => {
+        root.classList.add('dark');
+        root.dataset.theme = 'dark';
+        root.style.colorScheme = 'only dark';
+        root.style.backgroundColor = '#09090b';
+      };
+      forceDark();
+      window.__RUANGDZIKIR_FORCE_DARK__ = forceDark;
+    })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // IMPORTANT: configure Tailwind after the CDN runtime exists.
+    // Dark variants must follow the permanent .dark class, never OS/browser theme.
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            arabic: ['Amiri', 'serif']
+          },
+          boxShadow: {
+            soft: '0 18px 50px rgba(15, 23, 42, 0.08)'
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css?v=20260915-polish5" />
+</head>
+<body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-900/70 selection:text-emerald-50 !bg-zinc-950 !text-zinc-100">
+  <div class="pointer-events-none fixed inset-x-0 top-0 -z-10 h-80 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,.10),transparent_56%)] !bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,.07),transparent_58%)]"></div>
+
+  <header class="sticky top-0 z-50 border-b border-zinc-200/70 bg-zinc-50/82 backdrop-blur-xl !border-zinc-800/80 !bg-zinc-950/82">
+    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <button class="group inline-flex items-center gap-2.5" data-view-target="home" aria-label="Ke beranda">
+        <span class="grid h-8 w-8 place-items-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 !border-emerald-900/70 !bg-emerald-950/40 !text-emerald-300">
+          <i data-lucide="moon-star" class="h-4 w-4"></i>
+        </span>
+        <span class="text-[15px] font-semibold tracking-[-0.03em]">ruangdzikir.com</span>
+      </button>
+
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
+        <button class="nav-link is-active" data-view-target="home">Beranda</button>
+        <button class="nav-link" data-view-target="quran">Al-Quran</button>
+        <button class="nav-link" data-view-target="iqro">Huruf Hijaiyah</button>
+        <button class="nav-link" data-view-target="asmaul">Asmaul Husna</button>
+        <button class="nav-link" data-view-target="qibla">Kiblat</button>
+        <button class="nav-link" data-view-target="tasbih">Tasbih</button>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <span class="hidden h-[38px] w-[38px] md:block" aria-hidden="true"></span>
+        <button id="mobileMenuButton" class="icon-btn md:hidden" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Buka menu">
+          <i data-lucide="menu" class="h-5 w-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden border-t border-zinc-200/70 px-4 py-3 !border-zinc-800 md:hidden">
+      <nav class="mx-auto grid max-w-7xl gap-1" aria-label="Navigasi mobile">
+        <button class="mobile-nav-link is-active" data-view-target="home">
+          <i data-lucide="house" class="h-4 w-4"></i>
+          Beranda
+        </button>
+        <button class="mobile-nav-link" data-view-target="quran">
+          <i data-lucide="book-open" class="h-4 w-4"></i>
+          Al-Quran
+        </button>
+        <button class="mobile-nav-link" data-view-target="iqro">
+          <i data-lucide="graduation-cap" class="h-4 w-4"></i>
+          Huruf Hijaiyah
+        </button>
+        <button class="mobile-nav-link" data-view-target="asmaul">
+          <i data-lucide="sparkles" class="h-4 w-4"></i>
+          Asmaul Husna
+        </button>
+        <button class="mobile-nav-link" data-view-target="qibla">
+          <i data-lucide="compass" class="h-4 w-4"></i>
+          Kiblat
+        </button>
+        <button class="mobile-nav-link" data-view-target="tasbih">
+          <i data-lucide="circle-dot" class="h-4 w-4"></i>
+          Tasbih
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8 lg:pt-12">
+    <section id="view-home" class="app-view view-enter" data-view="home">
+      <div class="grid items-start gap-10 lg:grid-cols-[1.08fr_.92fr] lg:gap-14">
+        <div class="pt-3 lg:pt-10">
+          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-zinc-600 shadow-sm !border-zinc-800 !bg-zinc-900/70 !text-zinc-300">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            Ruang ibadah digital yang sederhana
+          </div>
+          <h1 class="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-[-0.045em] text-zinc-950 sm:text-5xl lg:text-6xl !text-white">
+            Lebih tenang untuk <span class="text-emerald-700 !text-emerald-300">mengingat-Nya.</span>
+          </h1>
+          <p class="mt-6 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg !text-zinc-400">
+            Jadwal sholat, Al-Quran, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital dalam satu ruang yang bersih tanpa distraksi.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <button class="primary-btn" data-view-target="quran"><i data-lucide="book-open" class="h-4 w-4"></i>Baca Al-Quran</button>
+            <button class="secondary-btn" data-view-target="tasbih"><i data-lucide="circle-dot" class="h-4 w-4"></i>Mulai Berdzikir</button>
+          </div>
+
+          <div class="mt-10 grid max-w-2xl grid-cols-3 gap-3 border-t border-zinc-200 pt-6 !border-zinc-800">
+            <div>
+              <div class="text-sm font-semibold text-zinc-950 !text-zinc-100">Tanpa akun</div>
+              <div class="mt-1 text-xs text-zinc-500 !text-zinc-500">Langsung digunakan</div>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-zinc-950 !text-zinc-100">Privasi</div>
+              <div class="mt-1 text-xs text-zinc-500 !text-zinc-500">Lokasi tidak disimpan</div>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-zinc-950 !text-zinc-100">Ringan</div>
+              <div class="mt-1 text-xs text-zinc-500 !text-zinc-500">Static & cepat</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel overflow-hidden p-0">
+          <div class="border-b border-zinc-200/80 px-5 py-5 sm:px-6 !border-zinc-800">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="eyebrow">Jadwal hari ini</div>
+                <div class="mt-1 flex items-center gap-2">
+                  <h2 id="prayerDate" class="text-lg font-semibold tracking-[-0.02em]">Memuat tanggal...</h2>
+                </div>
+                <p id="hijriDate" class="mt-1 text-sm text-zinc-500 !text-zinc-400">Menyiapkan jadwal sholat</p>
+              </div>
+              <button id="refreshPrayer" class="icon-btn" type="button" aria-label="Perbarui jadwal" title="Perbarui jadwal">
+                <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+              </button>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <div class="inline-flex min-w-0 items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-600 !border-zinc-800 !bg-zinc-950 !text-zinc-300">
+                <i data-lucide="map-pin" class="h-3.5 w-3.5 shrink-0 text-emerald-600 !text-emerald-400"></i>
+                <span id="locationLabel" class="truncate">Mencari lokasi...</span>
+              </div>
+              <button id="openLocationModal" class="text-xs font-medium text-emerald-700 hover:text-emerald-800 !text-emerald-300 hover:!text-emerald-200">Ganti lokasi</button>
+            </div>
+          </div>
+
+          <div class="p-5 sm:p-6">
+            <div id="prayerLoading" class="space-y-3">
+              <div class="skeleton h-20 rounded-2xl"></div>
+              <div class="grid grid-cols-3 gap-2 sm:grid-cols-6">
+                <div class="skeleton h-20 rounded-xl"></div><div class="skeleton h-20 rounded-xl"></div><div class="skeleton h-20 rounded-xl"></div>
+                <div class="skeleton h-20 rounded-xl"></div><div class="skeleton h-20 rounded-xl"></div><div class="skeleton h-20 rounded-xl"></div>
+              </div>
+            </div>
+
+            <div id="prayerContent" class="hidden">
+              <div class="relative overflow-hidden rounded-2xl border border-emerald-200/80 bg-emerald-50/80 p-5 !border-emerald-900/70 !bg-emerald-950/30">
+                <div class="absolute -right-7 -top-10 h-32 w-32 rounded-full border border-emerald-200/70 !border-emerald-900/50"></div>
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full border border-emerald-200/70 !border-emerald-900/50"></div>
+                <div class="relative flex items-end justify-between gap-4">
+                  <div>
+                    <div class="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800/70 !text-emerald-300/70">Sholat berikutnya</div>
+                    <div id="nextPrayerName" class="mt-2 text-2xl font-semibold tracking-[-0.03em] text-emerald-950 !text-emerald-100">—</div>
+                    <div id="nextPrayerTime" class="mt-1 text-sm text-emerald-800/80 !text-emerald-300/80">—</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-emerald-800/70 !text-emerald-300/70">Menuju waktu</div>
+                    <div id="prayerCountdown" class="mt-1 font-mono text-xl font-semibold tabular-nums text-emerald-950 !text-emerald-100">--:--:--</div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="prayerGrid" class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6"></div>
+              <p id="prayerMethod" class="mt-4 text-xs leading-5 text-zinc-500 !text-zinc-500">Perhitungan: Kementerian Agama Republik Indonesia.</p>
+            </div>
+
+            <div
+              id="prayerError"
+              class="hidden rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 !border-amber-900/60 !bg-amber-950/30 !text-amber-200"
+            >
+              <div class="flex gap-3">
+                <i data-lucide="triangle-alert" class="mt-0.5 h-4 w-4 shrink-0"></i>
+                <div>
+                  <strong>Jadwal belum dapat dimuat.</strong>
+                  <p id="prayerErrorText" class="mt-1 opacity-80">Periksa koneksi lalu coba lagi.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="mt-16 grid gap-4 sm:grid-cols-2 lg:mt-24 lg:grid-cols-5">
+        <button class="feature-card text-left" data-view-target="quran">
+          <span class="feature-icon"><i data-lucide="book-open" class="h-5 w-5"></i></span>
+          <span class="feature-title">Baca Al-Quran</span>
+          <span class="feature-copy">114 surah dengan teks Arab, latin, dan terjemahan Indonesia.</span>
+          <span class="feature-action">Buka Al-Quran <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
+        <button class="feature-card text-left" data-view-target="iqro">
+          <span class="feature-icon"><i data-lucide="languages" class="h-5 w-5"></i></span>
+          <span class="feature-title">Belajar Huruf Hijaiyah</span>
+          <span class="feature-copy">Kenali huruf Arab satu per satu, nama huruf, bunyi dasar, dan latihan sederhana.</span>
+          <span class="feature-action">Mulai belajar <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
+        <button class="feature-card text-left" data-view-target="asmaul">
+          <span class="feature-icon"><i data-lucide="sparkles" class="h-5 w-5"></i></span>
+          <span class="feature-title">Asmaul Husna</span>
+          <span class="feature-copy">Pelajari 99 nama Allah lengkap dengan tulisan Arab, latin, dan arti Indonesia.</span>
+          <span class="feature-action">Lihat 99 nama <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
+        <button class="feature-card text-left" data-view-target="qibla">
+          <span class="feature-icon"><i data-lucide="compass" class="h-5 w-5"></i></span>
+          <span class="feature-title">Arah Kiblat</span>
+          <span class="feature-copy">Temukan arah Ka'bah dengan lokasi dan sensor kompas pada ponselmu.</span>
+          <span class="feature-action">Buka kompas <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
+        <button class="feature-card text-left" data-view-target="tasbih">
+          <span class="feature-icon"><i data-lucide="circle-dot" class="h-5 w-5"></i></span>
+          <span class="feature-title">Tasbih Digital</span>
+          <span class="feature-copy">Counter dzikir minimalis dengan target otomatis dan getar ringan di ponsel.</span>
+          <span class="feature-action">Mulai berdzikir <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
+      </div>
+    </section>
+
+    <section id="view-quran" class="app-view hidden" data-view="quran">
+      <div id="surahDirectory">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div class="eyebrow">Al-Quran</div>
+            <h1 class="page-title">Baca dengan tenang.</h1>
+            <p class="page-subtitle">Pilih surah, cari berdasarkan nama atau arti, lalu baca ayat tanpa berpindah halaman.</p>
+          </div>
+          <div class="relative w-full sm:w-80">
+            <i data-lucide="search" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"></i>
+            <input id="surahSearch" class="input-field pl-10" type="search" autocomplete="off" placeholder="Cari surah, mis. an nas, al fatihah..." aria-label="Cari surah" />
+          </div>
+        </div>
+
+        <div class="mt-8 flex items-center justify-between border-b border-zinc-200 pb-3 !border-zinc-800">
+          <p id="surahCount" class="text-xs font-medium text-zinc-500">Memuat daftar surah...</p>
+          <button id="reloadSurahs" class="hidden text-xs font-semibold text-emerald-700 !text-emerald-300">Muat ulang</button>
+        </div>
+
+        <div id="surahLoading" class="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <div class="skeleton h-28 rounded-2xl"></div><div class="skeleton h-28 rounded-2xl"></div><div class="skeleton h-28 rounded-2xl"></div>
+          <div class="skeleton h-28 rounded-2xl"></div><div class="skeleton h-28 rounded-2xl"></div><div class="skeleton h-28 rounded-2xl"></div>
+        </div>
+        <div id="surahList" class="mt-4 hidden grid gap-3 md:grid-cols-2 lg:grid-cols-3"></div>
+        <div id="surahEmpty" class="hidden py-20 text-center">
+          <div class="mx-auto grid h-12 w-12 place-items-center rounded-2xl border border-zinc-200 bg-white !border-zinc-800 !bg-zinc-900"><i data-lucide="search-x" class="h-5 w-5 text-zinc-400"></i></div>
+          <p class="mt-4 text-sm font-medium">Surah tidak ditemukan.</p>
+          <p class="mt-1 text-xs text-zinc-500">Coba kata kunci lain.</p>
+        </div>
+      </div>
+
+      <div id="surahReader" class="hidden">
+        <div class="sticky top-16 z-30 -mx-4 border-b border-zinc-200/80 bg-zinc-50/92 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 !border-zinc-800 !bg-zinc-950/92">
+          <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
+            <button id="backToSurahs" class="secondary-btn !px-3 !py-2"><i data-lucide="arrow-left" class="h-4 w-4"></i><span class="hidden sm:inline">Daftar Surah</span></button>
+            <div class="min-w-0 text-center">
+              <div id="readerTitle" class="truncate text-sm font-semibold">—</div>
+              <div id="readerMeta" class="mt-0.5 truncate text-xs text-zinc-500">—</div>
+            </div>
+            <button id="scrollTopReader" class="icon-btn" type="button" aria-label="Ke atas" title="Ke atas"><i data-lucide="arrow-up" class="h-4 w-4"></i></button>
+          </div>
+        </div>
+
+        <div id="readerLoading" class="mx-auto mt-8 max-w-4xl space-y-4">
+          <div class="skeleton h-52 rounded-3xl"></div><div class="skeleton h-52 rounded-3xl"></div><div class="skeleton h-52 rounded-3xl"></div>
+        </div>
+        <div id="readerError" class="mx-auto mt-8 hidden max-w-4xl rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900 !border-amber-900/60 !bg-amber-950/30 !text-amber-200"></div>
+        <article id="ayatList" class="mx-auto mt-8 hidden max-w-4xl space-y-4"></article>
+      </div>
+    </section>
+
+    <section id="view-iqro" class="app-view hidden" data-view="iqro">
+      <div class="max-w-4xl">
+        <div class="eyebrow">Belajar Huruf Hijaiyah</div>
+        <h1 class="page-title">Kenali huruf Arab dari bentuk dan bunyinya.</h1>
+        <p class="page-subtitle">Belajar perlahan seperti membuka lembar iqro: pilih satu huruf, lihat namanya, perhatikan bentuknya, lalu baca contoh bunyi dasarnya.</p>
+      </div>
+
+      <div class="hijaiyah-hero mt-8">
+        <div class="hijaiyah-hero-copy">
+          <span class="hijaiyah-kicker">Mulai dari yang paling dasar</span>
+          <h2>ا ب ت ث</h2>
+          <p>Tidak perlu terburu-buru. Kenali bentuk huruf satu per satu, lalu ulangi sampai mata mulai familiar dengan perbedaannya.</p>
+          <div class="hijaiyah-legend">
+            <span><i data-lucide="mouse-pointer-click" class="h-4 w-4"></i>Klik huruf</span>
+            <span><i data-lucide="book-open-check" class="h-4 w-4"></i>Lihat cara baca</span>
+            <span><i data-lucide="repeat-2" class="h-4 w-4"></i>Ulangi perlahan</span>
+          </div>
+        </div>
+        <div class="hijaiyah-book" aria-hidden="true">
+          <div class="hijaiyah-book-inner">
+            <div class="hijaiyah-book-label">BUKU BELAJAR</div>
+            <div class="hijaiyah-book-title">HURUF HIJAIYAH</div>
+            <div class="hijaiyah-book-arabic font-arabic" dir="rtl">اِقْرَأْ</div>
+            <div class="hijaiyah-book-row font-arabic" dir="rtl">ا ب ت ث</div>
+            <div class="hijaiyah-book-footer">ruangdzikir.com</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 grid gap-6 lg:grid-cols-[1.1fr_.9fr] lg:items-start">
+        <div class="hijaiyah-panel">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-[.16em] text-emerald-700 !text-emerald-300">Daftar huruf</div>
+              <h2 class="mt-2 text-xl font-semibold tracking-[-.03em]">Pilih huruf untuk dipelajari</h2>
+            </div>
+            <span class="hijaiyah-count">28 huruf dasar</span>
+          </div>
+          <div id="hijaiyahGrid" class="hijaiyah-grid mt-6" aria-label="Daftar huruf hijaiyah"></div>
+        </div>
+
+        <aside class="hijaiyah-detail lg:sticky lg:top-24">
+          <div class="hijaiyah-detail-top">
+            <span id="hijaiyahIndex" class="hijaiyah-index">Huruf 01</span>
+            <span id="hijaiyahName" class="hijaiyah-name">Alif</span>
+          </div>
+          <div id="hijaiyahLetter" class="hijaiyah-letter font-arabic" dir="rtl">ا</div>
+          <div class="hijaiyah-read-box">
+            <div>
+              <span class="hijaiyah-detail-label">Nama huruf</span>
+              <strong id="hijaiyahLatin">Alif</strong>
+            </div>
+            <div>
+              <span class="hijaiyah-detail-label">Bunyi dasar</span>
+              <strong id="hijaiyahSound">a</strong>
+            </div>
+          </div>
+          <div class="hijaiyah-example">
+            <span class="hijaiyah-detail-label">Contoh dengan fathah</span>
+            <div id="hijaiyahExample" class="font-arabic" dir="rtl">اَ</div>
+            <p id="hijaiyahExampleRead">dibaca: a</p>
+          </div>
+          <p id="hijaiyahHint" class="hijaiyah-hint">Alif adalah huruf pertama. Perhatikan bentuknya yang tegak dan sederhana.</p>
+          <button id="nextHijaiyah" class="hijaiyah-next" type="button">
+            Huruf berikutnya <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </button>
+        </aside>
+      </div>
+
+      <div class="mt-8 rounded-2xl border border-zinc-200 bg-white p-5 text-sm leading-6 text-zinc-600 !border-zinc-800 !bg-zinc-900/50 !text-zinc-400">
+        <div class="flex gap-3"><i data-lucide="info" class="mt-0.5 h-4 w-4 shrink-0 text-zinc-400"></i><p>Halaman ini membantu mengenali bentuk dan nama huruf. Untuk makhraj yang tepat, tetap disarankan belajar langsung bersama guru ngaji agar posisi lidah dan keluarnya huruf dapat dikoreksi.</p></div>
+      </div>
+    </section>
+
+    <section id="view-asmaul" class="app-view hidden" data-view="asmaul">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-3xl">
+          <div class="eyebrow">Asmaul Husna</div>
+          <h1 class="page-title">99 nama Allah yang indah.</h1>
+          <p class="page-subtitle">Baca dan pelajari Asmaul Husna dengan tulisan Arab, latin, serta arti ringkas dalam bahasa Indonesia.</p>
+        </div>
+        <div class="w-full lg:max-w-sm">
+          <label for="asmaulSearch" class="form-label">Cari nama atau arti</label>
+          <div class="relative mt-2">
+            <i data-lucide="search" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"></i>
+            <input id="asmaulSearch" class="input-field pl-10" type="search" autocomplete="off" placeholder="Contoh: Ar-Rahman, Pengasih..." />
+          </div>
+        </div>
+      </div>
+
+      <div class="asmaul-highlight mt-8">
+        <div>
+          <span class="asmaul-kicker">ذِكْرٌ وَمَعْرِفَةٌ</span>
+          <h2>Mengenal-Nya melalui nama-nama yang indah.</h2>
+          <p>Gunakan halaman ini sebagai pengingat dan bahan belajar ringan. Pencarian bekerja langsung di perangkat tanpa reload halaman.</p>
+        </div>
+        <div class="asmaul-highlight-arabic font-arabic" dir="rtl"><span>ٱللَّٰه</span></div>
+      </div>
+
+      <div class="mt-7 flex items-center justify-between gap-4">
+        <p id="asmaulCount" class="text-sm text-zinc-400">99 nama</p>
+        <button id="clearAsmaulSearch" class="hidden text-xs font-semibold text-emerald-300 hover:text-emerald-200" type="button">Hapus pencarian</button>
+      </div>
+
+      <div id="asmaulGrid" class="asmaul-grid mt-4" aria-live="polite"></div>
+      <div id="asmaulEmpty" class="hidden rounded-2xl border border-zinc-800 bg-zinc-900/50 p-8 text-center text-sm text-zinc-400">Nama atau arti yang dicari belum ditemukan.</div>
+    </section>
+
+
+    <section id="view-qibla" class="app-view hidden" data-view="qibla">
+      <div class="max-w-3xl">
+        <div class="eyebrow">Kompas Kiblat</div>
+        <h1 class="page-title">Temukan arah Ka'bah dengan mudah.</h1>
+        <p class="page-subtitle">Izinkan lokasi untuk menghitung arah kiblat. Di ponsel yang memiliki sensor kompas, arah akan bergerak mengikuti posisi perangkat secara real-time.</p>
+      </div>
+
+      <div class="qibla-layout mt-9">
+        <div class="qibla-compass-card">
+          <div class="qibla-compass-wrap" id="qiblaCompassWrap">
+            <div class="qibla-compass" id="qiblaCompass" aria-label="Kompas arah kiblat">
+              <span class="qibla-cardinal qibla-n">U</span>
+              <span class="qibla-cardinal qibla-e">T</span>
+              <span class="qibla-cardinal qibla-s">S</span>
+              <span class="qibla-cardinal qibla-w">B</span>
+              <div class="qibla-ticks" aria-hidden="true"></div>
+              <div class="qibla-arrow" id="qiblaArrow" aria-hidden="true">
+                <span class="qibla-kaaba"><i data-lucide="landmark" class="h-4 w-4"></i></span>
+                <span class="qibla-arrow-line"></span>
+              </div>
+              <div class="qibla-center-dot"></div>
+            </div>
+          </div>
+          <div class="qibla-live-status" id="qiblaLiveStatus">Aktifkan lokasi untuk menghitung arah kiblat.</div>
+          <div class="qibla-bearing-row">
+            <div><span class="qibla-stat-label">Arah kiblat</span><strong id="qiblaBearing">—</strong></div>
+            <div><span class="qibla-stat-label">Jarak Ka'bah</span><strong id="qiblaDistance">—</strong></div>
+            <div><span class="qibla-stat-label">Arah perangkat</span><strong id="deviceHeading">—</strong></div>
+          </div>
+        </div>
+
+        <aside class="qibla-control-card">
+          <div class="qibla-control-icon"><i data-lucide="navigation" class="h-5 w-5"></i></div>
+          <h2>Arahkan ponsel ke kiblat</h2>
+          <p>Letakkan ponsel mendatar dan jauhkan dari benda bermagnet. Panah hijau menunjukkan posisi kiblat relatif terhadap arah atas ponsel.</p>
+
+          <div class="qibla-location-box">
+            <span class="qibla-stat-label">Lokasi yang digunakan</span>
+            <strong id="qiblaLocationLabel">Belum ditentukan</strong>
+          </div>
+
+          <button id="qiblaUseLocation" class="primary-btn mt-4 w-full justify-center" type="button">
+            <i data-lucide="locate-fixed" class="h-4 w-4"></i>Gunakan lokasi saya
+          </button>
+          <button id="qiblaEnableCompass" class="secondary-btn mt-3 w-full justify-center" type="button">
+            <i data-lucide="compass" class="h-4 w-4"></i>Aktifkan kompas
+          </button>
+
+          <div class="qibla-divider"><span></span>atau pilih kota<span></span></div>
+          <label class="block">
+            <span class="form-label">Kota</span>
+            <select id="qiblaCity" class="input-field">
+              <option value="Balikpapan">Balikpapan</option>
+              <option value="Jakarta">Jakarta</option>
+              <option value="Samarinda">Samarinda</option>
+              <option value="Surabaya">Surabaya</option>
+              <option value="Bandung">Bandung</option>
+              <option value="Yogyakarta">Yogyakarta</option>
+              <option value="Semarang">Semarang</option>
+              <option value="Medan">Medan</option>
+              <option value="Makassar">Makassar</option>
+              <option value="Palembang">Palembang</option>
+              <option value="Banjarmasin">Banjarmasin</option>
+              <option value="Denpasar">Denpasar</option>
+            </select>
+          </label>
+          <button id="qiblaUseCity" class="secondary-btn mt-3 w-full justify-center" type="button">Gunakan kota ini</button>
+
+          <div class="qibla-note"><i data-lucide="info" class="h-4 w-4"></i><span>Sensor kompas dapat terpengaruh casing magnet, meja logam, speaker, atau perangkat elektronik di sekitar.</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="view-tasbih" class="app-view hidden" data-view="tasbih">
+      <div class="mx-auto max-w-3xl text-center">
+        <div class="eyebrow justify-center">Digital Tasbih</div>
+        <h1 class="page-title">Sederhana. Fokus. Berdzikir.</h1>
+        <p class="page-subtitle mx-auto">Pilih bacaan, tentukan target, lalu tap lingkaran di bawah. Hitungan disimpan di perangkatmu.</p>
+      </div>
+
+      <div class="mx-auto mt-9 max-w-xl">
+        <div class="panel p-5 sm:p-7">
+          <div class="grid gap-3 sm:grid-cols-2">
+            <label class="block">
+              <span class="form-label">Bacaan</span>
+              <select id="dhikrSelect" class="input-field">
+                <option value="Subhanallah">Subhanallah</option>
+                <option value="Alhamdulillah">Alhamdulillah</option>
+                <option value="Allahu Akbar">Allahu Akbar</option>
+                <option value="Astaghfirullah">Astaghfirullah</option>
+                <option value="custom">Custom...</option>
+              </select>
+            </label>
+            <label class="block">
+              <span class="form-label">Target</span>
+              <select id="targetSelect" class="input-field">
+                <option value="33">33 kali</option>
+                <option value="99">99 kali</option>
+                <option value="100">100 kali</option>
+                <option value="0">Tanpa target</option>
+              </select>
+            </label>
+          </div>
+
+          <label id="customDhikrWrap" class="mt-3 hidden block">
+            <span class="form-label">Bacaan custom</span>
+            <input id="customDhikr" class="input-field" maxlength="60" placeholder="Tulis bacaan dzikir" />
+          </label>
+
+          <div class="mt-8 text-center">
+            <div id="dhikrName" class="text-sm font-semibold text-zinc-600 !text-zinc-300">Subhanallah</div>
+            <div id="targetProgress" class="mt-1 text-xs text-zinc-400">0 dari 33</div>
+          </div>
+
+          <div class="relative mx-auto mt-6 grid w-fit place-items-center">
+            <svg class="pointer-events-none absolute h-64 w-64 -rotate-90 sm:h-72 sm:w-72" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="1.8" class="text-zinc-200 !text-zinc-800" />
+              <circle id="progressRing" cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" class="text-emerald-500 transition-[stroke-dashoffset] duration-300" />
+            </svg>
+            <button id="tasbihButton" class="tasbih-button" type="button" aria-label="Tambah hitungan dzikir">
+              <span id="tasbihCount" class="text-6xl font-semibold tracking-[-0.06em] tabular-nums sm:text-7xl">0</span>
+              <span class="mt-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-400">tap</span>
+            </button>
+          </div>
+
+          <div class="mt-8 flex items-center justify-center gap-3">
+            <button id="resetTasbih" class="secondary-btn"><i data-lucide="rotate-ccw" class="h-4 w-4"></i>Reset</button>
+            <button id="vibrationToggle" class="secondary-btn" aria-pressed="true"><i data-lucide="smartphone" class="h-4 w-4"></i><span id="vibrationLabel">Getar aktif</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-zinc-200/80 py-8 !border-zinc-800">
+    <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <p>© <span id="footerYear"></span> ruangdzikir.com</p>
+      <p>Dibuat untuk menemani ibadah, tanpa iklan dan tanpa distraksi.</p>
+    </div>
+  </footer>
+
+  <div
+    id="locationModal"
+    class="fixed inset-0 z-[70] hidden items-end justify-center bg-zinc-950/40 p-0 backdrop-blur-sm sm:items-center sm:p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="locationModalTitle"
+  >
+    <div
+      class="w-full max-w-lg rounded-t-3xl border border-zinc-200 bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-6 !border-zinc-800 !bg-zinc-900"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h2 id="locationModalTitle" class="text-lg font-semibold tracking-[-0.02em]">Pilih lokasi jadwal</h2>
+          <p class="mt-1 text-sm text-zinc-500 !text-zinc-400">Gunakan lokasi perangkat atau pilih kota secara manual.</p>
+        </div>
+        <button id="closeLocationModal" class="icon-btn" aria-label="Tutup"><i data-lucide="x" class="h-4 w-4"></i></button>
+      </div>
+
+      <button
+        id="useDeviceLocation"
+        class="mt-5 flex w-full items-center gap-3 rounded-2xl border border-zinc-200 p-4 text-left transition hover:border-emerald-300 hover:bg-emerald-50/60 !border-zinc-800 hover:!border-emerald-900 hover:!bg-emerald-950/20"
+      >
+        <span class="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700 !bg-emerald-950/40 !text-emerald-300">
+          <i data-lucide="locate-fixed" class="h-5 w-5"></i>
+        </span>
+        <span>
+          <strong class="block text-sm">Gunakan lokasi perangkat</strong>
+          <span class="mt-0.5 block text-xs text-zinc-500">Browser akan meminta izin lokasi.</span>
+        </span>
+      </button>
+
+      <div class="my-5 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-zinc-400">
+        <span class="h-px flex-1 bg-zinc-200 !bg-zinc-800"></span>
+        atau
+        <span class="h-px flex-1 bg-zinc-200 !bg-zinc-800"></span>
+      </div>
+
+      <label class="block">
+        <span class="form-label">Pilih kota</span>
+        <select id="manualCity" class="input-field">
+          <option value="Jakarta">Jakarta</option>
+          <option value="Balikpapan">Balikpapan</option>
+          <option value="Samarinda">Samarinda</option>
+          <option value="Surabaya">Surabaya</option>
+          <option value="Bandung">Bandung</option>
+          <option value="Yogyakarta">Yogyakarta</option>
+          <option value="Semarang">Semarang</option>
+          <option value="Medan">Medan</option>
+          <option value="Makassar">Makassar</option>
+          <option value="Palembang">Palembang</option>
+          <option value="Banjarmasin">Banjarmasin</option>
+          <option value="Denpasar">Denpasar</option>
+        </select>
+      </label>
+      <button id="applyManualCity" class="primary-btn mt-4 w-full justify-center">Gunakan kota ini</button>
+      <p class="mt-4 text-xs leading-5 text-zinc-400">Lokasi hanya digunakan untuk mengambil jadwal sholat dan tidak dikirim ke server ruangdzikir.com.</p>
+    </div>
+  </div>
+
+  <div
+    id="toast"
+    class="pointer-events-none fixed bottom-5 left-1/2 z-[80] hidden -translate-x-1/2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-lg !border-zinc-700 !bg-zinc-900 !text-zinc-200"
+  ></div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="app.js?v=20260915-polish5" defer></script>
+</body>
+</html>
