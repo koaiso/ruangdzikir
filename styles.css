@@ -73,6 +73,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 }
 .panel { border-color: rgb(39 39 42); background: rgba(24,24,27,.64); box-shadow: 0 20px 70px rgba(0,0,0,.18); }
 
+.prayer-surface { min-height: 286px; }
+
 .primary-btn, .secondary-btn {
   display: inline-flex;
   align-items: center;
