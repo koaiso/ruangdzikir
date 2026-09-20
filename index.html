@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html
   lang="id"
   class="dark scroll-smooth"
@@ -16,11 +16,30 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://fonts.googleapis.com https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none';"
+    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com; script-src 'self' 'unsafe-inline' https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;"
   />
   <meta name="color-scheme" content="dark" />
   <meta name="supported-color-schemes" content="dark" />
-  <title>ruangdzikir.com — Dzikir, Quran & Jadwal Sholat</title>
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="application-name" content="Ruang Dzikir" />
+  <link rel="canonical" href="https://ruangdzikir.com/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:site_name" content="Ruang Dzikir" />
+  <meta property="og:title" content="Ruang Dzikir — Dzikir, Quran &amp; Jadwal Sholat" />
+  <meta
+    property="og:description"
+    content="Ruang digital yang tenang untuk jadwal sholat, Al-Quran, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih."
+  />
+  <meta property="og:url" content="https://ruangdzikir.com/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Ruang Dzikir — Dzikir, Quran &amp; Jadwal Sholat" />
+  <meta
+    name="twitter:description"
+    content="Jadwal sholat, Al-Quran, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih dalam satu ruang yang tenang."
+  />
+  <title>ruangdzikir.com — Dzikir, Quran &amp; Jadwal Sholat</title>
 
   <script>
     // Hard-lock the site to dark mode. Never follow OS/browser theme.
@@ -52,60 +71,74 @@
     />
   </noscript>
   <link rel="stylesheet" href="tailwind.generated.css?v=20260919" />
-  <link rel="stylesheet" href="styles.css?v=20260915-polish5" />
+  <link rel="stylesheet" href="styles.css?v=20260920-header1" />
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Ruang Dzikir",
+      "url": "https://ruangdzikir.com/",
+      "description": "Jadwal sholat, Al-Quran, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "inLanguage": "id",
+      "isAccessibleForFree": true
+    }
+  </script>
 </head>
 <body class="min-h-screen bg-zinc-950 text-zinc-100 antialiased selection:bg-emerald-900/70 selection:text-emerald-50 !bg-zinc-950 !text-zinc-100">
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
   <div class="pointer-events-none fixed inset-x-0 top-0 -z-10 h-80 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,.10),transparent_56%)] !bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,.07),transparent_58%)]"></div>
 
   <header class="sticky top-0 z-50 border-b border-zinc-200/70 bg-zinc-50/82 backdrop-blur-xl !border-zinc-800/80 !bg-zinc-950/82">
-    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-      <button class="group inline-flex items-center gap-2.5" data-view-target="home" aria-label="Ke beranda">
+    <div class="site-header-inner mx-auto h-16 max-w-7xl items-center px-4 sm:px-6 lg:px-8">
+      <button class="site-brand group inline-flex items-center gap-2.5" data-view-target="home" type="button" aria-label="Ke beranda">
         <span class="grid h-8 w-8 place-items-center rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 !border-emerald-900/70 !bg-emerald-950/40 !text-emerald-300">
           <i data-lucide="moon-star" class="h-4 w-4"></i>
         </span>
         <span class="text-[15px] font-semibold tracking-[-0.03em]">ruangdzikir.com</span>
       </button>
 
-      <nav class="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
-        <button class="nav-link is-active" data-view-target="home">Beranda</button>
-        <button class="nav-link" data-view-target="quran">Al-Quran</button>
-        <button class="nav-link" data-view-target="iqro">Huruf Hijaiyah</button>
-        <button class="nav-link" data-view-target="asmaul">Asmaul Husna</button>
-        <button class="nav-link" data-view-target="qibla">Kiblat</button>
-        <button class="nav-link" data-view-target="tasbih">Tasbih</button>
+      <nav class="desktop-nav items-center gap-1" aria-label="Navigasi utama">
+        <button class="nav-link is-active" data-view-target="home" type="button" aria-current="page">Beranda</button>
+        <button class="nav-link" data-view-target="quran" type="button">Al-Quran</button>
+        <button class="nav-link" data-view-target="iqro" type="button">Huruf Hijaiyah</button>
+        <button class="nav-link" data-view-target="asmaul" type="button">Asmaul Husna</button>
+        <button class="nav-link" data-view-target="qibla" type="button">Kiblat</button>
+        <button class="nav-link" data-view-target="tasbih" type="button">Tasbih</button>
       </nav>
 
-      <div class="flex items-center gap-2">
-        <span class="hidden h-[38px] w-[38px] md:block" aria-hidden="true"></span>
-        <button id="mobileMenuButton" class="icon-btn md:hidden" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Buka menu">
+      <div class="header-actions flex items-center">
+        <button id="mobileMenuButton" class="icon-btn" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Buka menu">
           <i data-lucide="menu" class="h-5 w-5"></i>
         </button>
       </div>
     </div>
 
-    <div id="mobileMenu" class="hidden border-t border-zinc-200/70 px-4 py-3 !border-zinc-800 md:hidden">
+    <div id="mobileMenu" class="hidden border-t border-zinc-200/70 px-4 py-3 !border-zinc-800">
       <nav class="mx-auto grid max-w-7xl gap-1" aria-label="Navigasi mobile">
-        <button class="mobile-nav-link is-active" data-view-target="home">
+        <button class="mobile-nav-link is-active" data-view-target="home" type="button" aria-current="page">
           <i data-lucide="house" class="h-4 w-4"></i>
           Beranda
         </button>
-        <button class="mobile-nav-link" data-view-target="quran">
+        <button class="mobile-nav-link" data-view-target="quran" type="button">
           <i data-lucide="book-open" class="h-4 w-4"></i>
           Al-Quran
         </button>
-        <button class="mobile-nav-link" data-view-target="iqro">
+        <button class="mobile-nav-link" data-view-target="iqro" type="button">
           <i data-lucide="graduation-cap" class="h-4 w-4"></i>
           Huruf Hijaiyah
         </button>
-        <button class="mobile-nav-link" data-view-target="asmaul">
+        <button class="mobile-nav-link" data-view-target="asmaul" type="button">
           <i data-lucide="sparkles" class="h-4 w-4"></i>
           Asmaul Husna
         </button>
-        <button class="mobile-nav-link" data-view-target="qibla">
+        <button class="mobile-nav-link" data-view-target="qibla" type="button">
           <i data-lucide="compass" class="h-4 w-4"></i>
           Kiblat
         </button>
-        <button class="mobile-nav-link" data-view-target="tasbih">
+        <button class="mobile-nav-link" data-view-target="tasbih" type="button">
           <i data-lucide="circle-dot" class="h-4 w-4"></i>
           Tasbih
         </button>
@@ -113,7 +146,7 @@
     </div>
   </header>
 
-  <main class="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8 lg:pt-12">
+  <main id="main-content" class="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 lg:px-8 lg:pt-12" tabindex="-1">
     <section id="view-home" class="app-view view-enter" data-view="home">
       <div class="grid items-start gap-10 lg:grid-cols-[1.08fr_.92fr] lg:gap-14">
         <div class="pt-3 lg:pt-10">
@@ -128,8 +161,8 @@
             Jadwal sholat, Al-Quran, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital dalam satu ruang yang bersih tanpa distraksi.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
-            <button class="primary-btn" data-view-target="quran"><i data-lucide="book-open" class="h-4 w-4"></i>Baca Al-Quran</button>
-            <button class="secondary-btn" data-view-target="tasbih"><i data-lucide="circle-dot" class="h-4 w-4"></i>Mulai Berdzikir</button>
+            <button class="primary-btn" data-view-target="quran" type="button"><i data-lucide="book-open" class="h-4 w-4"></i>Baca Al-Quran</button>
+            <button class="secondary-btn" data-view-target="tasbih" type="button"><i data-lucide="circle-dot" class="h-4 w-4"></i>Mulai Berdzikir</button>
           </div>
 
           <div class="mt-10 grid max-w-2xl grid-cols-3 gap-3 border-t border-zinc-200 pt-6 !border-zinc-800">
@@ -143,12 +176,12 @@
             </div>
             <div>
               <div class="text-sm font-semibold text-zinc-950 !text-zinc-100">Ringan</div>
-              <div class="mt-1 text-xs text-zinc-500 !text-zinc-500">Static & cepat</div>
+              <div class="mt-1 text-xs text-zinc-500 !text-zinc-500">Static &amp; cepat</div>
             </div>
           </div>
         </div>
 
-        <aside class="panel overflow-hidden p-0">
+        <aside class="panel overflow-hidden p-0" aria-labelledby="prayerDate">
           <div class="border-b border-zinc-200/80 px-5 py-5 sm:px-6 !border-zinc-800">
             <div class="flex items-start justify-between gap-4">
               <div>
@@ -168,7 +201,7 @@
                 <i data-lucide="map-pin" class="h-3.5 w-3.5 shrink-0 text-emerald-600 !text-emerald-400"></i>
                 <span id="locationLabel" class="truncate">Mencari lokasi...</span>
               </div>
-              <button id="openLocationModal" class="text-xs font-medium text-emerald-700 hover:text-emerald-800 !text-emerald-300 hover:!text-emerald-200">Ganti lokasi</button>
+              <button id="openLocationModal" class="text-xs font-medium text-emerald-700 hover:text-emerald-800 !text-emerald-300 hover:!text-emerald-200" type="button">Ganti lokasi</button>
             </div>
           </div>
 
@@ -219,31 +252,31 @@
       </div>
 
       <div class="mt-16 grid gap-4 sm:grid-cols-2 lg:mt-24 lg:grid-cols-5">
-        <button class="feature-card text-left" data-view-target="quran">
+        <button class="feature-card text-left" data-view-target="quran" type="button">
           <span class="feature-icon"><i data-lucide="book-open" class="h-5 w-5"></i></span>
           <span class="feature-title">Baca Al-Quran</span>
           <span class="feature-copy">114 surah dengan teks Arab, latin, dan terjemahan Indonesia.</span>
           <span class="feature-action">Buka Al-Quran <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
         </button>
-        <button class="feature-card text-left" data-view-target="iqro">
+        <button class="feature-card text-left" data-view-target="iqro" type="button">
           <span class="feature-icon"><i data-lucide="languages" class="h-5 w-5"></i></span>
           <span class="feature-title">Belajar Huruf Hijaiyah</span>
           <span class="feature-copy">Kenali huruf Arab satu per satu, nama huruf, bunyi dasar, dan latihan sederhana.</span>
           <span class="feature-action">Mulai belajar <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
         </button>
-        <button class="feature-card text-left" data-view-target="asmaul">
+        <button class="feature-card text-left" data-view-target="asmaul" type="button">
           <span class="feature-icon"><i data-lucide="sparkles" class="h-5 w-5"></i></span>
           <span class="feature-title">Asmaul Husna</span>
           <span class="feature-copy">Pelajari 99 nama Allah lengkap dengan tulisan Arab, latin, dan arti Indonesia.</span>
           <span class="feature-action">Lihat 99 nama <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
         </button>
-        <button class="feature-card text-left" data-view-target="qibla">
+        <button class="feature-card text-left" data-view-target="qibla" type="button">
           <span class="feature-icon"><i data-lucide="compass" class="h-5 w-5"></i></span>
           <span class="feature-title">Arah Kiblat</span>
           <span class="feature-copy">Temukan arah Ka'bah dengan lokasi dan sensor kompas pada ponselmu.</span>
           <span class="feature-action">Buka kompas <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
         </button>
-        <button class="feature-card text-left" data-view-target="tasbih">
+        <button class="feature-card text-left" data-view-target="tasbih" type="button">
           <span class="feature-icon"><i data-lucide="circle-dot" class="h-5 w-5"></i></span>
           <span class="feature-title">Tasbih Digital</span>
           <span class="feature-copy">Counter dzikir minimalis dengan target otomatis dan getar ringan di ponsel.</span>
@@ -268,7 +301,7 @@
 
         <div class="mt-8 flex items-center justify-between border-b border-zinc-200 pb-3 !border-zinc-800">
           <p id="surahCount" class="text-xs font-medium text-zinc-500">Memuat daftar surah...</p>
-          <button id="reloadSurahs" class="hidden text-xs font-semibold text-emerald-700 !text-emerald-300">Muat ulang</button>
+          <button id="reloadSurahs" class="hidden text-xs font-semibold text-emerald-700 !text-emerald-300" type="button">Muat ulang</button>
         </div>
 
         <div id="surahLoading" class="mt-4 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
@@ -286,7 +319,7 @@
       <div id="surahReader" class="hidden">
         <div class="sticky top-16 z-30 -mx-4 border-b border-zinc-200/80 bg-zinc-50/92 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 !border-zinc-800 !bg-zinc-950/92">
           <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
-            <button id="backToSurahs" class="secondary-btn !px-3 !py-2"><i data-lucide="arrow-left" class="h-4 w-4"></i><span class="hidden sm:inline">Daftar Surah</span></button>
+            <button id="backToSurahs" class="secondary-btn !px-3 !py-2" type="button"><i data-lucide="arrow-left" class="h-4 w-4"></i><span class="hidden sm:inline">Daftar Surah</span></button>
             <div class="min-w-0 text-center">
               <div id="readerTitle" class="truncate text-sm font-semibold">—</div>
               <div id="readerMeta" class="mt-0.5 truncate text-xs text-zinc-500">—</div>
@@ -341,10 +374,10 @@
             </div>
             <span class="hijaiyah-count">28 huruf dasar</span>
           </div>
-          <div id="hijaiyahGrid" class="hijaiyah-grid mt-6" aria-label="Daftar huruf hijaiyah"></div>
+          <div id="hijaiyahGrid" class="hijaiyah-grid mt-6" role="group" aria-label="Daftar huruf hijaiyah"></div>
         </div>
 
-        <aside class="hijaiyah-detail lg:sticky lg:top-24">
+        <aside class="hijaiyah-detail lg:sticky lg:top-24" aria-label="Detail huruf hijaiyah">
           <div class="hijaiyah-detail-top">
             <span id="hijaiyahIndex" class="hijaiyah-index">Huruf 01</span>
             <span id="hijaiyahName" class="hijaiyah-name">Alif</span>
@@ -422,7 +455,7 @@
       <div class="qibla-layout mt-9">
         <div class="qibla-compass-card">
           <div class="qibla-compass-wrap" id="qiblaCompassWrap">
-            <div class="qibla-compass" id="qiblaCompass" aria-label="Kompas arah kiblat">
+            <div class="qibla-compass" id="qiblaCompass" role="img" aria-label="Kompas arah kiblat">
               <span class="qibla-cardinal qibla-n">U</span>
               <span class="qibla-cardinal qibla-e">T</span>
               <span class="qibla-cardinal qibla-s">S</span>
@@ -443,9 +476,9 @@
           </div>
         </div>
 
-        <aside class="qibla-control-card">
+        <aside class="qibla-control-card" aria-labelledby="qiblaGuideTitle">
           <div class="qibla-control-icon"><i data-lucide="navigation" class="h-5 w-5"></i></div>
-          <h2>Arahkan ponsel ke kiblat</h2>
+          <h2 id="qiblaGuideTitle">Arahkan ponsel ke kiblat</h2>
           <p>Letakkan ponsel mendatar dan jauhkan dari benda bermagnet. Panah hijau menunjukkan posisi kiblat relatif terhadap arah atas ponsel.</p>
 
           <div class="qibla-location-box">
@@ -518,7 +551,7 @@
 
           <label id="customDhikrWrap" class="mt-3 hidden block">
             <span class="form-label">Bacaan custom</span>
-            <input id="customDhikr" class="input-field" maxlength="60" placeholder="Tulis bacaan dzikir" />
+            <input id="customDhikr" class="input-field" type="text" maxlength="60" placeholder="Tulis bacaan dzikir" />
           </label>
 
           <div class="mt-8 text-center">
@@ -538,8 +571,8 @@
           </div>
 
           <div class="mt-8 flex items-center justify-center gap-3">
-            <button id="resetTasbih" class="secondary-btn"><i data-lucide="rotate-ccw" class="h-4 w-4"></i>Reset</button>
-            <button id="vibrationToggle" class="secondary-btn" aria-pressed="true"><i data-lucide="smartphone" class="h-4 w-4"></i><span id="vibrationLabel">Getar aktif</span></button>
+            <button id="resetTasbih" class="secondary-btn" type="button"><i data-lucide="rotate-ccw" class="h-4 w-4"></i>Reset</button>
+            <button id="vibrationToggle" class="secondary-btn" type="button" aria-pressed="true"><i data-lucide="smartphone" class="h-4 w-4"></i><span id="vibrationLabel">Getar aktif</span></button>
           </div>
         </div>
       </div>
@@ -568,11 +601,12 @@
           <h2 id="locationModalTitle" class="text-lg font-semibold tracking-[-0.02em]">Pilih lokasi jadwal</h2>
           <p class="mt-1 text-sm text-zinc-500 !text-zinc-400">Gunakan lokasi perangkat atau pilih kota secara manual.</p>
         </div>
-        <button id="closeLocationModal" class="icon-btn" aria-label="Tutup"><i data-lucide="x" class="h-4 w-4"></i></button>
+        <button id="closeLocationModal" class="icon-btn" type="button" aria-label="Tutup"><i data-lucide="x" class="h-4 w-4"></i></button>
       </div>
 
       <button
         id="useDeviceLocation"
+        type="button"
         class="mt-5 flex w-full items-center gap-3 rounded-2xl border border-zinc-200 p-4 text-left transition hover:border-emerald-300 hover:bg-emerald-50/60 !border-zinc-800 hover:!border-emerald-900 hover:!bg-emerald-950/20"
       >
         <span class="grid h-10 w-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700 !bg-emerald-950/40 !text-emerald-300">
@@ -607,7 +641,7 @@
           <option value="Denpasar">Denpasar</option>
         </select>
       </label>
-      <button id="applyManualCity" class="primary-btn mt-4 w-full justify-center">Gunakan kota ini</button>
+      <button id="applyManualCity" class="primary-btn mt-4 w-full justify-center" type="button">Gunakan kota ini</button>
       <p class="mt-4 text-xs leading-5 text-zinc-400">Lokasi hanya digunakan untuk mengambil jadwal sholat dan tidak dikirim ke server ruangdzikir.com.</p>
     </div>
   </div>
@@ -617,7 +651,12 @@
     class="pointer-events-none fixed bottom-5 left-1/2 z-[80] hidden -translate-x-1/2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-xs font-medium text-zinc-700 shadow-lg !border-zinc-700 !bg-zinc-900 !text-zinc-200"
   ></div>
 
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
-  <script src="app.js?v=20260915-polish5" defer></script>
+  <script
+    src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.js"
+    integrity="sha384-L0vkqT/Xajy/BJR61WFLBDKJc60ZKKigF3gXZcWzQvDyEcwwCWK8vA3lcppKlbmE"
+    crossorigin="anonymous"
+    defer
+  ></script>
+  <script src="app.js?v=20260920-header1" defer></script>
 </body>
 </html>
