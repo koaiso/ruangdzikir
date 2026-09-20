@@ -192,13 +192,22 @@
     $('#refreshPrayer').addEventListener('click', () => requestPrayerTimes({ refresh: true }));
   }
 
-  async function requestPrayerTimes({ forceDevice = false } = {}) {
+  async function requestPrayerTimes({ forceDevice = false, refresh = false } = {}) {
     const requestId = ++state.prayerRequestId;
     setPrayerUI('loading');
 
-    if (!forceDevice && state.settings.prayerMode === 'city' && state.settings.city) {
-      $('#manualCity').value = state.settings.city;
-      await fetchPrayerByCity(state.settings.city, requestId);
+    // Never request browser location during the initial page load. A device
+    // location request is only allowed after the visitor explicitly presses
+    // "Gunakan lokasi perangkat" (forceDevice: true).
+    if (!forceDevice) {
+      if (refresh && state.location?.type === 'device') {
+        await fetchPrayerByCoordinates(state.location.latitude, state.location.longitude, requestId);
+        return;
+      }
+
+      const city = state.settings.city || DEFAULT_CITY;
+      $('#manualCity').value = city;
+      await fetchPrayerByCity(city, requestId);
       return;
     }
 
@@ -1128,7 +1137,9 @@
   }
 
   function normalizeSettings(raw = {}) {
-    const safe = { prayerMode: 'device', city: DEFAULT_CITY };
+    // Privacy-first default: load a city schedule without opening the browser
+    // location permission prompt. Device mode is entered only by a user click.
+    const safe = { prayerMode: 'city', city: DEFAULT_CITY };
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return safe;
     if (raw.prayerMode === 'city' || raw.prayerMode === 'device') safe.prayerMode = raw.prayerMode;
     const nextCity = sanitizeText(raw.city, DEFAULT_CITY);
