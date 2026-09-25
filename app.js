@@ -13,6 +13,7 @@
   const SETTINGS_KEY = 'ruangdzikir:settings:v1';
   const TASBIH_KEY = 'ruangdzikir:tasbih:v1';
   const ADHKAR_KEY = 'ruangdzikir:adhkar:v1';
+  const POST_PRAYER_KEY = 'ruangdzikir:post-prayer:v1';
   const KAABA = { latitude: 21.422487, longitude: 39.826206 };
   const CITY_COORDS = {
     Balikpapan: [-1.2379, 116.8529],
@@ -81,6 +82,7 @@
     initIqro();
     initAsmaulHusna();
     initAdhkar();
+    initPostPrayer();
     initQibla();
     initTasbih();
 
@@ -100,7 +102,7 @@
   }
 
   function switchView(view) {
-    if (!['home', 'quran', 'adhkar', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
+    if (!['home', 'quran', 'adhkar', 'post-prayer', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
     state.currentView = view;
 
     $$('.app-view').forEach(section => {
@@ -126,6 +128,7 @@
 
     if (view === 'quran' && !state.surahs.length) loadSurahs();
     if (view === 'adhkar') renderAdhkar();
+    if (view === 'post-prayer') renderPostPrayer();
     if (view === 'qibla') renderQibla();
   }
 
@@ -947,7 +950,7 @@
   const ADHKAR = [
     {
       id: 'kursi', title: 'Ayat Kursi', subtitle: 'Al-Baqarah · 2:255', repetitions: 1,
-      arabic: 'اللّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
+      arabic: 'اللّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَؤُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
       latin: 'Allāhu lā ilāha illā huwal-ḥayyul-qayyūm. Lā ta’khudzu-hū sinatuw wa lā naum. Lahū mā fis-samāwāti wa mā fil-arḍ. Man dzalladzī yasyfa‘u ‘indahū illā bi’idznīh. Ya‘lamu mā baina aidīhim wa mā khalfahum. Wa lā yuḥīṭūna bisyai’im min ‘ilmihī illā bimā syā’. Wasi‘a kursiyyuhus-samāwāti wal-arḍ. Wa lā ya’ūduhū ḥifẓuhumā. Wa huwal-‘aliyyul-‘aẓīm.',
       meaning: 'Allah satu-satunya Tuhan, Mahahidup dan terus mengurus makhluk-Nya. Dia tidak mengantuk atau tidur. Segala yang di langit dan bumi milik-Nya; ilmu dan kekuasaan-Nya meliputi semuanya, dan menjaga keduanya tidak memberatkan-Nya.',
       source: 'Al-Baqarah 2:255 · Hisn al-Muslim 75', url: 'https://sunnah.com/hisn:75'
@@ -1002,6 +1005,86 @@
       source: 'Hisn al-Muslim 86 · Abu Dawud dan At-Tirmidzi', url: 'https://sunnah.com/hisn:86'
     }
   ];
+
+  const PRAYER_NAMES = { subuh: 'Subuh', zuhur: 'Zuhur', asar: 'Asar', maghrib: 'Maghrib', isya: 'Isya' };
+  // Bacaan dasar mengikuti bab "After salam" Hisn al-Muslim 66–71.
+  // Setelah Subuh dan Maghrib ada tambahan dari no. 72, dan khusus Subuh no. 73.
+  const POST_PRAYER_BASE = [
+    {
+      id: 'astaghfirullah', title: 'Istighfar', subtitle: 'Setelah salam', repetitions: 3,
+      arabic: 'أَسْتَغْفِرُ اللَّهَ', latin: 'Astaghfirullāh.',
+      meaning: 'Aku memohon ampun kepada Allah.',
+      source: 'Hisn al-Muslim 66 · Sahih Muslim', url: 'https://sunnah.com/hisn:66'
+    },
+    {
+      id: 'antas-salam', title: 'Allahumma Antas Salam', subtitle: 'Doa setelah istighfar', repetitions: 1,
+      arabic: 'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ',
+      latin: 'Allāhumma antas-salām, wa minkas-salām, tabārakta yā dzal-jalāli wal-ikrām.',
+      meaning: 'Ya Allah, Engkaulah sumber keselamatan, dari-Mu datang keselamatan. Mahaberkah Engkau, Pemilik keagungan dan kemuliaan.',
+      source: 'Hisn al-Muslim 66 · Sahih Muslim', url: 'https://sunnah.com/hisn:66'
+    },
+    {
+      id: 'tahlil-doa', title: 'Tahlil dan doa', subtitle: 'Mengakui kuasa Allah', repetitions: 1,
+      arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ وَلَا مُعْطِيَ لِمَا مَنَعْتَ وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ',
+      latin: 'Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli syai’in qadīr. Allāhumma lā māni‘a limā a‘ṭait, wa lā mu‘ṭiya limā mana‘t, wa lā yanfa‘u dzal-jaddi minkal-jadd.',
+      meaning: 'Tiada Tuhan selain Allah, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan pujian. Tak seorang pun dapat menahan pemberian-Nya atau memberi apa yang Dia tahan; kekayaan dan kedudukan tak berguna tanpa pertolongan-Nya.',
+      source: 'Hisn al-Muslim 67 · Bukhari dan Muslim', url: 'https://sunnah.com/hisn:67'
+    },
+    {
+      id: 'subhanallah', title: 'Tasbih', subtitle: 'Maha Suci Allah', repetitions: 33,
+      arabic: 'سُبْحَانَ اللَّهِ', latin: 'Subḥānallāh.', meaning: 'Maha Suci Allah.',
+      source: 'Hisn al-Muslim 69 · Sahih Muslim', url: 'https://sunnah.com/hisn:69'
+    },
+    {
+      id: 'alhamdulillah', title: 'Tahmid', subtitle: 'Segala puji bagi Allah', repetitions: 33,
+      arabic: 'الْحَمْدُ لِلَّهِ', latin: 'Alḥamdulillāh.', meaning: 'Segala puji bagi Allah.',
+      source: 'Hisn al-Muslim 69 · Sahih Muslim', url: 'https://sunnah.com/hisn:69'
+    },
+    {
+      id: 'allahu-akbar', title: 'Takbir', subtitle: 'Allah Mahabesar', repetitions: 33,
+      arabic: 'اللَّهُ أَكْبَرُ', latin: 'Allāhu akbar.', meaning: 'Allah Mahabesar.',
+      source: 'Hisn al-Muslim 69 · Sahih Muslim', url: 'https://sunnah.com/hisn:69'
+    },
+    {
+      id: 'tahlil-penutup', title: 'Tahlil pelengkap', subtitle: 'Melengkapi 99 bacaan', repetitions: 1,
+      arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+      latin: 'Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli syai’in qadīr.',
+      meaning: 'Tiada Tuhan selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan pujian, dan Dia Mahakuasa atas segala sesuatu.',
+      source: 'Hisn al-Muslim 69 · Sahih Muslim', url: 'https://sunnah.com/hisn:69'
+    },
+    { ...ADHKAR[0], source: 'Al-Baqarah 2:255 · Hisn al-Muslim 71', url: 'https://sunnah.com/hisn:71' }
+  ];
+
+  const POST_PRAYER_EXTRA = {
+    id: 'tahlil-sepuluh', title: 'Tahlil tambahan', subtitle: 'Khusus Subuh dan Maghrib', repetitions: 10,
+    arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
+    latin: 'Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu, yuḥyī wa yumīt, wa huwa ‘alā kulli syai’in qadīr.',
+    meaning: 'Tiada Tuhan selain Allah semata. Milik-Nya kerajaan dan pujian; Dia menghidupkan, mematikan, dan Mahakuasa atas segala sesuatu.',
+    source: 'Hisn al-Muslim 72 · At-Tirmidzi', url: 'https://sunnah.com/hisn:72'
+  };
+
+  const POST_PRAYER_FAJR = {
+    id: 'doa-ilmu', title: 'Doa ilmu dan rezeki', subtitle: 'Khusus setelah Subuh', repetitions: 1,
+    arabic: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا',
+    latin: 'Allāhumma innī as’aluka ‘ilman nāfi‘an, wa rizqan ṭayyiban, wa ‘amalan mutaqabbalan.',
+    meaning: 'Ya Allah, aku memohon ilmu yang bermanfaat, rezeki yang baik, dan amal yang diterima.',
+    source: 'Hisn al-Muslim 73 · Ibnu Majah', url: 'https://sunnah.com/hisn:73'
+  };
+
+  function postPrayerReadings(prayer) {
+    const extended = prayer === 'subuh' || prayer === 'maghrib';
+    const readings = POST_PRAYER_BASE.slice(0, 3);
+    if (extended) readings.push(POST_PRAYER_EXTRA);
+    readings.push(...POST_PRAYER_BASE.slice(3));
+    readings.push(...ADHKAR.slice(1, 4).map(item => ({
+      ...item,
+      repetitions: extended ? 3 : 1,
+      source: `${item.title} · Hisn al-Muslim 70`,
+      url: 'https://sunnah.com/hisn:70'
+    })));
+    if (prayer === 'subuh') readings.push(POST_PRAYER_FAJR);
+    return readings;
+  }
 
   const adhkarState = {
     period: new Date().getHours() < 15 ? 'morning' : 'evening',
@@ -1066,12 +1149,14 @@
     $('#adhkarProgressText').textContent = `${completed} dari ${ADHKAR.length} selesai`;
     $('#adhkarProgressBar').style.width = `${completed / ADHKAR.length * 100}%`;
 
-    $('#adhkarList').innerHTML = ADHKAR.map((item, index) => {
-      const count = adhkarCount(item);
-      const done = count === item.repetitions;
-      const reading = item[period] || item;
-      const title = item.id === 'day' ? `Doa memasuki ${period === 'morning' ? 'pagi' : 'petang'}` : item.title;
-      return `<article class="adhkar-card${done ? ' is-complete' : ''}">
+    $('#adhkarList').innerHTML = ADHKAR.map((item, index) => readingCard(item, index, adhkarCount(item), 'adhkar', period)).join('');
+  }
+
+  function readingCard(item, index, count, kind, period) {
+    const done = count === item.repetitions;
+    const reading = item[period] || item;
+    const title = item.id === 'day' ? `Doa memasuki ${period === 'morning' ? 'pagi' : 'petang'}` : item.title;
+    return `<article class="adhkar-card${done ? ' is-complete' : ''}">
         <div class="adhkar-card-top">
           <div class="adhkar-card-title"><span class="adhkar-index">${String(index + 1).padStart(2, '0')}</span>
             <div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(item.subtitle)}</p></div>
@@ -1084,12 +1169,80 @@
         <div class="adhkar-card-bottom">
           <a href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Buka sumber ${escapeHTML(title)} di Sunnah.com">${escapeHTML(item.source)} <span aria-hidden="true">↗</span></a>
           <div class="adhkar-actions">
-            ${count ? `<button type="button" class="adhkar-undo-btn" data-adhkar-undo="${item.id}" aria-label="Batalkan satu hitungan ${escapeHTML(title)}">Urungkan</button>` : ''}
-            <button type="button" class="adhkar-count-btn" data-adhkar-count="${item.id}" ${done ? 'disabled' : ''} aria-label="${done ? 'Selesai' : 'Tandai selesai satu bacaan'}: ${escapeHTML(title)}, ${count} dari ${item.repetitions}">${done ? '✓ Selesai' : `Sudah dibaca · ${count}/${item.repetitions}`}</button>
+            ${count ? `<button type="button" class="adhkar-undo-btn" data-${kind}-undo="${item.id}" aria-label="Batalkan satu hitungan ${escapeHTML(title)}">Urungkan</button>` : ''}
+            <button type="button" class="adhkar-count-btn" data-${kind}-count="${item.id}" ${done ? 'disabled' : ''} aria-label="${done ? 'Selesai' : 'Tandai selesai satu bacaan'}: ${escapeHTML(title)}, ${count} dari ${item.repetitions}">${done ? '✓ Selesai' : `Sudah dibaca · ${count}/${item.repetitions}`}</button>
           </div>
         </div>
       </article>`;
-    }).join('');
+  }
+
+  // -------------------------
+  // Bacaan setelah sholat fardu
+  // -------------------------
+
+  const postPrayerState = { prayer: 'subuh', progress: getStoredObject(POST_PRAYER_KEY, {}) };
+
+  function syncPostPrayerDate() {
+    const date = adhkarDate();
+    if (postPrayerState.progress.date !== date) {
+      postPrayerState.progress = { date, prayers: {} };
+      saveJSON(POST_PRAYER_KEY, postPrayerState.progress);
+    }
+    if (!postPrayerState.progress.prayers || typeof postPrayerState.progress.prayers !== 'object' || Array.isArray(postPrayerState.progress.prayers)) {
+      postPrayerState.progress.prayers = {};
+    }
+    for (const prayer of Object.keys(PRAYER_NAMES)) {
+      const stored = postPrayerState.progress.prayers[prayer];
+      if (!stored || typeof stored !== 'object' || Array.isArray(stored)) postPrayerState.progress.prayers[prayer] = {};
+    }
+  }
+
+  function postPrayerCount(item) {
+    const raw = postPrayerState.progress.prayers[postPrayerState.prayer][item.id];
+    return Number.isInteger(raw) ? clampNumber(raw, 0, item.repetitions) : 0;
+  }
+
+  function initPostPrayer() {
+    $$('.post-prayer-tab').forEach(button => button.addEventListener('click', () => {
+      if (!Object.hasOwn(PRAYER_NAMES, button.dataset.prayerName)) return;
+      postPrayerState.prayer = button.dataset.prayerName;
+      renderPostPrayer();
+    }));
+
+    $('#postPrayerList').addEventListener('click', event => {
+      const button = event.target.closest('[data-post-prayer-count], [data-post-prayer-undo]');
+      if (!button) return;
+      syncPostPrayerDate();
+      const readings = postPrayerReadings(postPrayerState.prayer);
+      const item = readings.find(entry => entry.id === (button.dataset.postPrayerCount || button.dataset.postPrayerUndo));
+      if (!item) return;
+      const change = button.dataset.postPrayerUndo ? -1 : 1;
+      if (change > 0 && postPrayerCount(item) >= item.repetitions) return;
+      postPrayerState.progress.prayers[postPrayerState.prayer][item.id] = clampNumber(postPrayerCount(item) + change, 0, item.repetitions);
+      saveJSON(POST_PRAYER_KEY, postPrayerState.progress);
+      renderPostPrayer();
+      const keepUndo = postPrayerCount(item) > 0 && (change < 0 || postPrayerCount(item) === item.repetitions);
+      const nextButton = $(`[data-post-prayer-${keepUndo ? 'undo' : 'count'}="${item.id}"]`, $('#postPrayerList'));
+      if (nextButton && !nextButton.disabled) nextButton.focus({ preventScroll: true });
+    });
+    syncPostPrayerDate();
+    renderPostPrayer();
+  }
+
+  function renderPostPrayer() {
+    syncPostPrayerDate();
+    const prayer = postPrayerState.prayer;
+    const extended = prayer === 'subuh' || prayer === 'maghrib';
+    const readings = postPrayerReadings(prayer);
+    $$('.post-prayer-tab').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.prayerName === prayer)));
+    $('#postPrayerLabel').textContent = `Setelah sholat ${PRAYER_NAMES[prayer]}`;
+    $('#postPrayerHelper').textContent = extended
+      ? `Bacaan inti disertai tahlil 10 kali dan tiga surah pendek masing-masing 3 kali.${prayer === 'subuh' ? ' Setelah Subuh ada doa ilmu dan rezeki.' : ''}`
+      : 'Bacaan inti dengan Al-Ikhlas, Al-Falaq, dan An-Nas masing-masing satu kali.';
+    const completed = readings.filter(item => postPrayerCount(item) === item.repetitions).length;
+    $('#postPrayerProgressText').textContent = `${completed} dari ${readings.length} selesai`;
+    $('#postPrayerProgressBar').style.width = `${completed / readings.length * 100}%`;
+    $('#postPrayerList').innerHTML = readings.map((item, index) => readingCard(item, index, postPrayerCount(item), 'post-prayer')).join('');
   }
 
   // -------------------------

@@ -11,7 +11,7 @@
   <meta name="theme-color" content="#09090b" />
   <meta
     name="description"
-    content="ruangdzikir.com — jadwal sholat, Al-Quran, dzikir pagi dan petang, huruf hijaiyah, Asmaul Husna, kiblat, dan tasbih digital."
+    content="ruangdzikir.com — jadwal sholat, Al-Quran, dzikir pagi dan petang, bacaan setelah sholat, huruf hijaiyah, Asmaul Husna, kiblat, dan tasbih digital."
   />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta
@@ -30,14 +30,14 @@
   <meta property="og:title" content="Ruang Dzikir — Dzikir, Quran &amp; Jadwal Sholat" />
   <meta
     property="og:description"
-    content="Ruang digital yang tenang untuk jadwal sholat, Al-Quran, dzikir pagi dan petang, huruf hijaiyah, Asmaul Husna, kiblat, dan tasbih."
+    content="Ruang digital yang tenang untuk jadwal sholat, Al-Quran, dzikir pagi dan petang, bacaan setelah sholat, huruf hijaiyah, Asmaul Husna, kiblat, dan tasbih."
   />
   <meta property="og:url" content="https://ruangdzikir.com/" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Ruang Dzikir — Dzikir, Quran &amp; Jadwal Sholat" />
   <meta
     name="twitter:description"
-    content="Jadwal sholat, Al-Quran, dzikir pagi dan petang, huruf hijaiyah, Asmaul Husna, kiblat, dan tasbih dalam satu ruang yang tenang."
+    content="Jadwal sholat, Al-Quran, dzikir pagi dan petang, bacaan setelah sholat, huruf hijaiyah, Asmaul Husna, kiblat, dan tasbih dalam satu ruang yang tenang."
   />
   <title>ruangdzikir.com — Dzikir, Quran &amp; Jadwal Sholat</title>
 
@@ -71,7 +71,7 @@
     />
   </noscript>
   <link rel="stylesheet" href="tailwind.generated.css?v=20260919" />
-  <link rel="stylesheet" href="styles.css?v=20260925-adhkar1" />
+  <link rel="stylesheet" href="styles.css?v=20260925-prayer1" />
 
   <script type="application/ld+json">
     {
@@ -79,7 +79,7 @@
       "@type": "WebApplication",
       "name": "Ruang Dzikir",
       "url": "https://ruangdzikir.com/",
-      "description": "Jadwal sholat, Al-Quran, dzikir pagi dan petang, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital.",
+      "description": "Jadwal sholat, Al-Quran, dzikir pagi dan petang, bacaan setelah sholat, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital.",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Any",
       "inLanguage": "id",
@@ -103,7 +103,8 @@
       <nav class="desktop-nav items-center gap-1" aria-label="Navigasi utama">
         <button class="nav-link is-active" data-view-target="home" type="button" aria-current="page">Beranda</button>
         <button class="nav-link" data-view-target="quran" type="button">Al-Quran</button>
-        <button class="nav-link" data-view-target="adhkar" type="button">Dzikir Pagi &amp; Petang</button>
+        <button class="nav-link" data-view-target="adhkar" type="button">Pagi &amp; Petang</button>
+        <button class="nav-link" data-view-target="post-prayer" type="button">Setelah Sholat</button>
         <button class="nav-link" data-view-target="iqro" type="button">Huruf Hijaiyah</button>
         <button class="nav-link" data-view-target="asmaul" type="button">Asmaul Husna</button>
         <button class="nav-link" data-view-target="qibla" type="button">Kiblat</button>
@@ -130,6 +131,10 @@
         <button class="mobile-nav-link" data-view-target="adhkar" type="button">
           <i data-lucide="sun-moon" class="h-4 w-4"></i>
           Dzikir Pagi &amp; Petang
+        </button>
+        <button class="mobile-nav-link" data-view-target="post-prayer" type="button">
+          <i data-lucide="hand-heart" class="h-4 w-4"></i>
+          Bacaan Setelah Sholat
         </button>
         <button class="mobile-nav-link" data-view-target="iqro" type="button">
           <i data-lucide="graduation-cap" class="h-4 w-4"></i>
@@ -163,7 +168,7 @@
             Lebih tenang untuk <span class="text-emerald-700 !text-emerald-300">mengingat-Nya.</span>
           </h1>
           <p class="mt-6 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg !text-zinc-400">
-            Jadwal sholat, Al-Quran, dzikir pagi dan petang, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital dalam satu ruang yang bersih tanpa distraksi.
+            Jadwal sholat, Al-Quran, dzikir pagi dan petang, bacaan setelah sholat, huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital dalam satu ruang yang bersih tanpa distraksi.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <button class="primary-btn" data-view-target="quran" type="button"><i data-lucide="book-open" class="h-4 w-4"></i>Baca Al-Quran</button>
@@ -257,6 +262,12 @@
       </div>
 
       <div class="mt-16 grid gap-4 sm:grid-cols-2 lg:mt-24 lg:grid-cols-3">
+        <button class="feature-card text-left" data-view-target="post-prayer" type="button">
+          <span class="feature-icon"><i data-lucide="hand-heart" class="h-5 w-5"></i></span>
+          <span class="feature-title">Bacaan Setelah Sholat</span>
+          <span class="feature-copy">Pilih Subuh, Zuhur, Asar, Maghrib, atau Isya. Bacaan dan jumlahnya menyesuaikan.</span>
+          <span class="feature-action">Lihat bacaan <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
         <button class="feature-card text-left" data-view-target="adhkar" type="button">
           <span class="feature-icon"><i data-lucide="sun-moon" class="h-5 w-5"></i></span>
           <span class="feature-title">Dzikir Pagi &amp; Petang</span>
@@ -323,6 +334,42 @@
       </div>
       <div id="adhkarList" class="adhkar-list"></div>
       <p class="adhkar-footnote">Transliterasi dan makna ringkas membantu membaca; periksa tautan sumber pada tiap bacaan untuk rujukan lengkap.</p>
+    </section>
+
+    <section id="view-post-prayer" class="app-view hidden" data-view="post-prayer">
+      <div class="adhkar-hero post-prayer-hero">
+        <div class="adhkar-hero-content">
+          <span class="adhkar-kicker"><i data-lucide="hand-heart" class="h-4 w-4"></i> Setelah salam</span>
+          <h1 class="adhkar-heading">Lanjutkan sholat dengan <em>mengingat-Nya.</em></h1>
+          <p class="adhkar-intro">Pilih sholat yang baru selesai. Bacaan inti tersedia untuk lima waktu; Subuh dan Maghrib memuat tambahan sesuai rujukan. Susunan ini panduan praktis, bukan urutan yang diwajibkan.</p>
+        </div>
+        <div class="adhkar-hero-mark" aria-hidden="true"><span>السَّلَامُ</span><small>ذِكْرٌ بَعْدَ الصَّلَاةِ</small></div>
+      </div>
+
+      <div class="post-prayer-selector">
+        <p class="adhkar-overline">Pilih waktu sholat</p>
+        <div class="post-prayer-tabs" role="group" aria-label="Pilih sholat fardu">
+          <button class="post-prayer-tab" type="button" data-prayer-name="subuh" aria-pressed="true">Subuh</button>
+          <button class="post-prayer-tab" type="button" data-prayer-name="zuhur" aria-pressed="false">Zuhur</button>
+          <button class="post-prayer-tab" type="button" data-prayer-name="asar" aria-pressed="false">Asar</button>
+          <button class="post-prayer-tab" type="button" data-prayer-name="maghrib" aria-pressed="false">Maghrib</button>
+          <button class="post-prayer-tab" type="button" data-prayer-name="isya" aria-pressed="false">Isya</button>
+        </div>
+      </div>
+
+      <div class="adhkar-toolbar post-prayer-toolbar">
+        <div>
+          <p id="postPrayerLabel" class="adhkar-overline">Setelah sholat Subuh</p>
+          <h2 class="adhkar-list-heading">Baca dengan tenang.</h2>
+          <p id="postPrayerHelper" class="adhkar-helper"></p>
+        </div>
+        <div class="adhkar-progress" aria-live="polite">
+          <span id="postPrayerProgressText">0 bacaan selesai</span>
+          <span class="adhkar-progress-track"><span id="postPrayerProgressBar"></span></span>
+        </div>
+      </div>
+      <div id="postPrayerList" class="adhkar-list"></div>
+      <p class="adhkar-footnote">Tautan pada tiap bacaan membuka rujukannya. Hitungan tersimpan di perangkat untuk setiap sholat dan mulai baru pada hari berikutnya.</p>
     </section>
 
     <section id="view-quran" class="app-view hidden" data-view="quran">
@@ -697,6 +744,6 @@
     crossorigin="anonymous"
     defer
   ></script>
-  <script src="app.js?v=20260925-adhkar1" defer></script>
+  <script src="app.js?v=20260925-prayer1" defer></script>
 </body>
 </html>
