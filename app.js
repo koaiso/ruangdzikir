@@ -12,6 +12,7 @@
   const SURAH_CACHE_KEY = 'ruangdzikir:surahs:v2';
   const SETTINGS_KEY = 'ruangdzikir:settings:v1';
   const TASBIH_KEY = 'ruangdzikir:tasbih:v1';
+  const ADHKAR_KEY = 'ruangdzikir:adhkar:v1';
   const KAABA = { latitude: 21.422487, longitude: 39.826206 };
   const CITY_COORDS = {
     Balikpapan: [-1.2379, 116.8529],
@@ -79,6 +80,7 @@
     initQuran();
     initIqro();
     initAsmaulHusna();
+    initAdhkar();
     initQibla();
     initTasbih();
 
@@ -98,7 +100,7 @@
   }
 
   function switchView(view) {
-    if (!['home', 'quran', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
+    if (!['home', 'quran', 'adhkar', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
     state.currentView = view;
 
     $$('.app-view').forEach(section => {
@@ -123,6 +125,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (view === 'quran' && !state.surahs.length) loadSurahs();
+    if (view === 'adhkar') renderAdhkar();
     if (view === 'qibla') renderQibla();
   }
 
@@ -145,7 +148,7 @@
     });
 
     window.addEventListener('resize', () => {
-      if (window.matchMedia('(min-width: 1024px)').matches) closeMenu();
+      if (window.matchMedia('(min-width: 1200px)').matches) closeMenu();
     });
   }
 
@@ -933,6 +936,160 @@
 
   function toDeg(value) {
     return Number(value) * 180 / Math.PI;
+  }
+
+  // -------------------------
+  // Dzikir pagi dan petang
+  // -------------------------
+
+  // Pilihan bacaan pagi dan petang. Setiap item menyertakan sumber yang bisa dibuka.
+  // Makna di bawah diringkas sendiri; teks Arab dan jumlah pengulangan dicek pada rujukan.
+  const ADHKAR = [
+    {
+      id: 'kursi', title: 'Ayat Kursi', subtitle: 'Al-Baqarah · 2:255', repetitions: 1,
+      arabic: 'اللّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
+      latin: 'Allāhu lā ilāha illā huwal-ḥayyul-qayyūm. Lā ta’khudzu-hū sinatuw wa lā naum. Lahū mā fis-samāwāti wa mā fil-arḍ. Man dzalladzī yasyfa‘u ‘indahū illā bi’idznīh. Ya‘lamu mā baina aidīhim wa mā khalfahum. Wa lā yuḥīṭūna bisyai’im min ‘ilmihī illā bimā syā’. Wasi‘a kursiyyuhus-samāwāti wal-arḍ. Wa lā ya’ūduhū ḥifẓuhumā. Wa huwal-‘aliyyul-‘aẓīm.',
+      meaning: 'Allah satu-satunya Tuhan, Mahahidup dan terus mengurus makhluk-Nya. Dia tidak mengantuk atau tidur. Segala yang di langit dan bumi milik-Nya; ilmu dan kekuasaan-Nya meliputi semuanya, dan menjaga keduanya tidak memberatkan-Nya.',
+      source: 'Al-Baqarah 2:255 · Hisn al-Muslim 75', url: 'https://sunnah.com/hisn:75'
+    },
+    {
+      id: 'ikhlas', title: 'Al-Ikhlas', subtitle: 'Surah 112 · empat ayat', repetitions: 3,
+      arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ۞ قُلْ هُوَ اللَّهُ أَحَدٌ ۞ اللَّهُ الصَّمَدُ ۞ لَمْ يَلِدْ وَلَمْ يُولَدْ ۞ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ',
+      latin: 'Bismillāhir-raḥmānir-raḥīm. Qul huwallāhu aḥad. Allāhuṣ-ṣamad. Lam yalid wa lam yūlad. Wa lam yakul lahū kufuwan aḥad.',
+      meaning: 'Katakanlah: Allah Maha Esa, tempat bergantung segala sesuatu. Dia tidak beranak dan tidak diperanakkan; tidak ada yang setara dengan-Nya.',
+      source: 'Al-Ikhlas 112:1–4 · Hisn al-Muslim 76', url: 'https://sunnah.com/hisn:76'
+    },
+    {
+      id: 'falaq', title: 'Al-Falaq', subtitle: 'Surah 113 · lima ayat', repetitions: 3,
+      arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ مِنْ شَرِّ مَا خَلَقَ ۞ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۞ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۞ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ',
+      latin: 'Bismillāhir-raḥmānir-raḥīm. Qul a‘ūdzu birabbil-falaq. Min syarri mā khalaq. Wa min syarri ghāsiqin idzā waqab. Wa min syarrin-naffātsāti fil-‘uqad. Wa min syarri ḥāsidin idzā ḥasad.',
+      meaning: 'Memohon perlindungan kepada Tuhan yang menguasai waktu subuh dari keburukan makhluk, kegelapan, sihir, dan kedengkian.',
+      source: 'Al-Falaq 113:1–5 · Hisn al-Muslim 76', url: 'https://sunnah.com/hisn:76'
+    },
+    {
+      id: 'nas', title: 'An-Nas', subtitle: 'Surah 114 · enam ayat', repetitions: 3,
+      arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ۞ قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۞ مَلِكِ النَّاسِ ۞ إِلَٰهِ النَّاسِ ۞ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۞ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۞ مِنَ الْجِنَّةِ وَالنَّاسِ',
+      latin: 'Bismillāhir-raḥmānir-raḥīm. Qul a‘ūdzu birabbin-nās. Malikin-nās. Ilāhin-nās. Min syarril-waswāsil-khannās. Alladzī yuwaswisu fī ṣudūrin-nās. Minal-jinnati wan-nās.',
+      meaning: 'Memohon perlindungan kepada Tuhan, Raja, dan sembahan manusia dari bisikan jahat yang datang dari jin maupun manusia.',
+      source: 'An-Nas 114:1–6 · Hisn al-Muslim 76', url: 'https://sunnah.com/hisn:76'
+    },
+    {
+      id: 'day', title: 'Doa memasuki pagi', subtitle: 'Doa sesuai waktu · satu kali', repetitions: 1,
+      morning: {
+        arabic: 'اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ',
+        latin: 'Allāhumma bika aṣbaḥnā, wa bika amsainā, wa bika naḥyā, wa bika namūt, wa ilaikan-nusyūr.',
+        meaning: 'Ya Allah, dengan pertolongan-Mu kami memasuki pagi dan petang, hidup dan mati; kepada-Mu kebangkitan.'
+      },
+      evening: {
+        arabic: 'اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ',
+        latin: 'Allāhumma bika amsainā, wa bika aṣbaḥnā, wa bika naḥyā, wa bika namūt, wa ilaikal-maṣīr.',
+        meaning: 'Ya Allah, dengan pertolongan-Mu kami memasuki petang dan pagi, hidup dan mati; kepada-Mu tempat kembali.'
+      },
+      source: 'Hisn al-Muslim 78 · At-Tirmidzi', url: 'https://sunnah.com/hisn:78'
+    },
+    {
+      id: 'istighfar', title: 'Sayyidul Istighfar', subtitle: 'Permohonan ampun · satu kali', repetitions: 1,
+      arabic: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+      latin: 'Allāhumma anta rabbī lā ilāha illā anta, khalaqtanī wa anā ‘abduka, wa anā ‘alā ‘ahdika wa wa‘dika mastaṭa‘t. A‘ūdzu bika min syarri mā ṣana‘t. Abū’u laka bini‘matika ‘alayya wa abū’u bidzanbī, faghfir lī fa innahū lā yaghfirudz-dzunūba illā anta.',
+      meaning: 'Ya Allah, Engkaulah Tuhanku. Aku mengakui nikmat-Mu dan dosaku, berlindung dari keburukan perbuatanku, serta memohon ampun kepada-Mu; hanya Engkau yang mengampuni dosa.',
+      source: 'Hisn al-Muslim 79 · Sahih al-Bukhari', url: 'https://sunnah.com/hisn:79'
+    },
+    {
+      id: 'bismillah', title: 'Doa perlindungan', subtitle: 'Dengan nama Allah · tiga kali', repetitions: 3,
+      arabic: 'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+      latin: 'Bismillāhilladzī lā yaḍurru ma‘asmihī syai’un fil-arḍi wa lā fis-samā’i wa huwas-samī‘ul-‘alīm.',
+      meaning: 'Dengan nama Allah; bersama nama-Nya tidak ada sesuatu di bumi maupun langit yang dapat mendatangkan bahaya. Dia Maha Mendengar lagi Maha Mengetahui.',
+      source: 'Hisn al-Muslim 86 · Abu Dawud dan At-Tirmidzi', url: 'https://sunnah.com/hisn:86'
+    }
+  ];
+
+  const adhkarState = {
+    period: new Date().getHours() < 15 ? 'morning' : 'evening',
+    progress: getStoredObject(ADHKAR_KEY, {})
+  };
+
+  function adhkarDate() {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  }
+
+  function syncAdhkarDate() {
+    const date = adhkarDate();
+    if (adhkarState.progress.date !== date) {
+      adhkarState.progress = { date, morning: {}, evening: {} };
+      saveJSON(ADHKAR_KEY, adhkarState.progress);
+    }
+    for (const period of ['morning', 'evening']) {
+      if (!adhkarState.progress[period] || typeof adhkarState.progress[period] !== 'object' || Array.isArray(adhkarState.progress[period])) {
+        adhkarState.progress[period] = {};
+      }
+    }
+  }
+
+  function adhkarCount(item) {
+    const raw = adhkarState.progress[adhkarState.period][item.id];
+    return Number.isInteger(raw) ? clampNumber(raw, 0, item.repetitions) : 0;
+  }
+
+  function initAdhkar() {
+    $$('.adhkar-tab').forEach(button => {
+      button.addEventListener('click', () => {
+        adhkarState.period = button.dataset.adhkarPeriod;
+        renderAdhkar();
+      });
+    });
+    $('#adhkarList').addEventListener('click', event => {
+      const button = event.target.closest('[data-adhkar-count], [data-adhkar-undo]');
+      if (!button) return;
+      syncAdhkarDate();
+      const item = ADHKAR.find(entry => entry.id === (button.dataset.adhkarCount || button.dataset.adhkarUndo));
+      if (!item) return;
+      const change = button.dataset.adhkarUndo ? -1 : 1;
+      if (change > 0 && adhkarCount(item) >= item.repetitions) return;
+      adhkarState.progress[adhkarState.period][item.id] = clampNumber(adhkarCount(item) + change, 0, item.repetitions);
+      saveJSON(ADHKAR_KEY, adhkarState.progress);
+      renderAdhkar();
+      const keepUndo = adhkarCount(item) > 0 && (change < 0 || adhkarCount(item) === item.repetitions);
+      const nextButton = $(`[data-adhkar-${keepUndo ? 'undo' : 'count'}="${item.id}"]`, $('#adhkarList'));
+      if (nextButton && !nextButton.disabled) nextButton.focus({ preventScroll: true });
+    });
+    syncAdhkarDate();
+    renderAdhkar();
+  }
+
+  function renderAdhkar() {
+    syncAdhkarDate();
+    const period = adhkarState.period;
+    $$('.adhkar-tab').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.adhkarPeriod === period)));
+    $('#adhkarPeriodLabel').textContent = `Dzikir ${period === 'morning' ? 'pagi' : 'petang'}`;
+    const completed = ADHKAR.filter(item => adhkarCount(item) === item.repetitions).length;
+    $('#adhkarProgressText').textContent = `${completed} dari ${ADHKAR.length} selesai`;
+    $('#adhkarProgressBar').style.width = `${completed / ADHKAR.length * 100}%`;
+
+    $('#adhkarList').innerHTML = ADHKAR.map((item, index) => {
+      const count = adhkarCount(item);
+      const done = count === item.repetitions;
+      const reading = item[period] || item;
+      const title = item.id === 'day' ? `Doa memasuki ${period === 'morning' ? 'pagi' : 'petang'}` : item.title;
+      return `<article class="adhkar-card${done ? ' is-complete' : ''}">
+        <div class="adhkar-card-top">
+          <div class="adhkar-card-title"><span class="adhkar-index">${String(index + 1).padStart(2, '0')}</span>
+            <div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(item.subtitle)}</p></div>
+          </div>
+          <span class="adhkar-repeat">${item.repetitions}× baca</span>
+        </div>
+        <p class="adhkar-arabic" lang="ar" dir="rtl">${escapeHTML(reading.arabic)}</p>
+        <div class="adhkar-reading"><span>Latin</span><p>${escapeHTML(reading.latin)}</p></div>
+        <div class="adhkar-reading adhkar-meaning"><span>Makna ringkas</span><p>${escapeHTML(reading.meaning)}</p></div>
+        <div class="adhkar-card-bottom">
+          <a href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Buka sumber ${escapeHTML(title)} di Sunnah.com">${escapeHTML(item.source)} <span aria-hidden="true">↗</span></a>
+          <div class="adhkar-actions">
+            ${count ? `<button type="button" class="adhkar-undo-btn" data-adhkar-undo="${item.id}" aria-label="Batalkan satu hitungan ${escapeHTML(title)}">Urungkan</button>` : ''}
+            <button type="button" class="adhkar-count-btn" data-adhkar-count="${item.id}" ${done ? 'disabled' : ''} aria-label="${done ? 'Selesai' : 'Tandai selesai satu bacaan'}: ${escapeHTML(title)}, ${count} dari ${item.repetitions}">${done ? '✓ Selesai' : `Sudah dibaca · ${count}/${item.repetitions}`}</button>
+          </div>
+        </div>
+      </article>`;
+    }).join('');
   }
 
   // -------------------------

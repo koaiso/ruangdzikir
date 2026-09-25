@@ -46,7 +46,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .desktop-nav { display: none; }
 .header-actions { justify-content: flex-end; }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .site-header-inner {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -577,6 +577,77 @@ input, select, textarea, button { color-scheme:dark !important; }
 @media(max-width:767px){
   .asmaul-highlight-arabic{width:100%;min-width:0;height:132px;min-height:132px;font-size:3.8rem !important;}
 }
+
+/* Dzikir pagi dan petang */
+.adhkar-hero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 18px;
+  min-height: 295px;
+  align-items: center;
+  border: 1px solid rgba(16,185,129,.25);
+  border-radius: 30px;
+  background: radial-gradient(circle at 82% 30%, rgba(16,185,129,.22), transparent 31%), linear-gradient(120deg, #10221d, #111315 68%);
+  padding: clamp(26px, 5vw, 56px);
+}
+.adhkar-hero::before {
+  content: '';
+  position: absolute;
+  width: 370px;
+  height: 370px;
+  right: -70px;
+  top: -105px;
+  border: 1px solid rgba(110,231,183,.13);
+  border-radius: 50%;
+  box-shadow: 0 0 0 52px rgba(110,231,183,.035), 0 0 0 108px rgba(110,231,183,.025);
+  pointer-events: none;
+}
+.adhkar-hero-content { position: relative; z-index: 1; max-width: 690px; }
+.adhkar-kicker { display: inline-flex; gap: 8px; align-items: center; color: #a7f3d0; font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.adhkar-heading { margin-top: 18px; max-width: 650px; color: #fafafa; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 650; letter-spacing: -.045em; line-height: 1.12; }
+.adhkar-heading em { color: #6ee7b7; font-style: normal; }
+.adhkar-intro { max-width: 600px; margin-top: 17px; color: #b4c4bf; font-size: 14px; line-height: 1.8; }
+.adhkar-tabs { display: inline-flex; flex-wrap: wrap; gap: 5px; margin-top: 26px; padding: 5px; border: 1px solid #365349; border-radius: 14px; background: rgba(9,9,11,.5); }
+.adhkar-tab { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 112px; min-height: 40px; border-radius: 10px; color: #a1a1aa; font-size: 13px; font-weight: 650; transition: background .2s, color .2s; }
+.adhkar-tab:hover { color: #fff; background: rgba(110,231,183,.1); }
+.adhkar-tab[aria-pressed="true"] { color: #052e25; background: #6ee7b7; }
+.adhkar-hero-mark { position: relative; z-index: 1; display: none; justify-self: center; color: #a7f3d0; text-align: center; }
+.adhkar-hero-mark span { display: block; font: 5.8rem/1.4 'Amiri', serif; }
+.adhkar-hero-mark small { display: block; margin-top: -14px; font: 1.25rem/1.5 'Amiri', serif; opacity: .65; }
+.adhkar-toolbar { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 22px; margin: 42px 0 20px; }
+.adhkar-overline { color: #6ee7b7; font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.adhkar-list-heading { margin-top: 5px; color: #fafafa; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 650; letter-spacing: -.035em; }
+.adhkar-helper { max-width: 650px; margin-top: 7px; color: #a1a1aa; font-size: 12px; line-height: 1.7; }
+.adhkar-progress { display: grid; gap: 8px; width: min(100%, 180px); color: #d4d4d8; font-size: 12px; font-weight: 600; }
+.adhkar-progress-track { display: block; width: 100%; height: 6px; overflow: hidden; border-radius: 999px; background: #303035; }
+.adhkar-progress-track > span { display: block; height: 100%; width: 0; border-radius: inherit; background: #34d399; transition: width .25s; }
+.adhkar-list { display: grid; gap: 18px; max-width: 930px; margin-inline: auto; }
+.adhkar-card { overflow: hidden; border: 1px solid #303035; border-radius: 24px; background: #161618; padding: clamp(20px, 3.5vw, 32px); transition: border-color .2s; }
+.adhkar-card.is-complete { border-color: rgba(52,211,153,.47); }
+.adhkar-card-top, .adhkar-card-bottom { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+.adhkar-card-title { display: flex; align-items: center; gap: 13px; }
+.adhkar-index { display: grid; flex: none; width: 41px; height: 41px; place-items: center; border: 1px solid #365349; border-radius: 13px; background: #1d3029; color: #a7f3d0; font-size: 12px; font-weight: 750; }
+.adhkar-card-title h3 { color: #fafafa; font-size: 17px; font-weight: 650; letter-spacing: -.02em; }
+.adhkar-card-title p { margin-top: 2px; color: #a1a1aa; font-size: 11px; }
+.adhkar-repeat { border: 1px solid #3f3f46; border-radius: 999px; padding: 5px 11px; color: #d4d4d8; font-size: 11px; font-weight: 650; white-space: nowrap; }
+.adhkar-arabic { margin: 27px 0; color: #fafafa; font: clamp(1.65rem, 3.2vw, 2.1rem)/2 'Amiri', serif; text-align: right; overflow-wrap: anywhere; }
+.adhkar-reading { border-top: 1px solid #303035; padding-top: 17px; margin-top: 17px; }
+.adhkar-reading > span { color: #6ee7b7; font-size: 10px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+.adhkar-reading p { margin-top: 8px; color: #d4d4d8; font-size: 13px; line-height: 1.9; }
+.adhkar-meaning p { color: #a1a1aa; }
+.adhkar-card-bottom { border-top: 1px solid #303035; margin-top: 22px; padding-top: 20px; }
+.adhkar-card-bottom a { color: #a7f3d0; font-size: 11px; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; }
+.adhkar-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.adhkar-undo-btn { min-height: 40px; padding: 9px 7px; color: #a1a1aa; font-size: 12px; }
+.adhkar-undo-btn:hover { color: #fafafa; }
+.adhkar-count-btn { min-height: 40px; border-radius: 11px; background: #10b981; padding: 9px 15px; color: #052e25; font-size: 12px; font-weight: 750; }
+.adhkar-count-btn:hover:not(:disabled) { background: #6ee7b7; }
+.adhkar-count-btn:disabled { cursor: default; background: rgba(16,185,129,.14); color: #6ee7b7; }
+.adhkar-tab:focus-visible, .adhkar-count-btn:focus-visible, .adhkar-undo-btn:focus-visible, .adhkar-card-bottom a:focus-visible { outline: 2px solid #a7f3d0; outline-offset: 3px; }
+.adhkar-footnote { max-width: 930px; margin: 22px auto 0; color: #a1a1aa; font-size: 11px; line-height: 1.7; }
+@media (min-width: 960px) { .adhkar-hero { grid-template-columns: minmax(0, 1fr) 240px; } .adhkar-hero-mark { display: block; } }
+@media (max-width: 600px) { .adhkar-hero { border-radius: 22px; } .adhkar-card-bottom { align-items: stretch; } .adhkar-card-bottom a { align-self: center; } .adhkar-actions { width: 100%; } .adhkar-count-btn { flex: 1; } .adhkar-arabic { line-height: 1.9; } }
 
 /* Qibla */
 .qibla-layout {
