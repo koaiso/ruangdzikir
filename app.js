@@ -1476,11 +1476,6 @@
     return String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
   }
 
-  function setSafeText(node, value, fallback = '') {
-    if (!node) return;
-    node.textContent = sanitizeText(value, fallback);
-  }
-
   function loadJSON(key, fallback) {
     try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
     catch (_) { return fallback; }
