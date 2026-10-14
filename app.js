@@ -102,7 +102,7 @@
   }
 
   function switchView(view) {
-    if (!['home', 'quran', 'adhkar', 'post-prayer', 'iqro', 'asmaul', 'qibla', 'tasbih', 'mosques'].includes(view)) return;
+    if (!['home', 'quran', 'adhkar', 'post-prayer', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
     state.currentView = view;
 
     $$('.app-view').forEach(section => {
