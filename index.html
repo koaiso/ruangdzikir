@@ -16,7 +16,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com; script-src 'self' 'unsafe-inline' https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;"
+    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com https://overpass-api.de; script-src 'self' 'unsafe-inline' https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;"
   />
   <meta name="color-scheme" content="dark" />
   <meta name="supported-color-schemes" content="dark" />
@@ -72,6 +72,7 @@
   </noscript>
   <link rel="stylesheet" href="tailwind.generated.css?v=20260919" />
   <link rel="stylesheet" href="styles.css?v=20260925-prayer1" />
+  <link rel="stylesheet" href="mosques.css?v=20261014" />
 
   <script type="application/ld+json">
     {
@@ -304,6 +305,41 @@
           <span class="feature-copy">Counter dzikir minimalis dengan target otomatis dan getar ringan di ponsel.</span>
           <span class="feature-action">Mulai berdzikir <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
         </button>
+        <button class="feature-card text-left" data-view-target="mosques" type="button">
+          <span class="feature-icon"><i data-lucide="map-pin" class="h-5 w-5"></i></span>
+          <span class="feature-title">Masjid Terdekat</span>
+          <span class="feature-copy">Cari masjid dan musala di sekitarmu, lihat perkiraan jarak, lalu buka petunjuk arah.</span>
+          <span class="feature-action">Temukan masjid <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
+
+      </div>
+    </section>
+
+    <section id="view-mosques" class="app-view hidden" data-view="mosques" aria-labelledby="mosqueHeading">
+      <button class="secondary-btn mosque-back" type="button" data-view-target="home">Kembali ke beranda</button>
+      <div class="eyebrow">Di sekitarmu</div>
+      <h1 id="mosqueHeading" class="mosque-heading">Masjid Terdekat</h1>
+      <p class="mosque-intro">Temukan masjid dan musala yang terpetakan di sekitar lokasimu. Pilih jarak pencarian, lalu cari saat kamu membutuhkannya.</p>
+      <div class="panel mosque-search-panel">
+        <div class="mosque-controls">
+          <label class="mosque-radius" for="mosqueRadius">
+            <span>Radius pencarian</span>
+            <select id="mosqueRadius" class="input-field">
+              <option value="1000">1 km</option>
+              <option value="3000" selected>3 km</option>
+              <option value="5000">5 km</option>
+            </select>
+          </label>
+          <button id="mosqueSearch" class="primary-btn" type="button" aria-describedby="mosquePrivacy">Cari masjid terdekat</button>
+        </div>
+        <p id="mosquePrivacy" class="mosque-privacy">Saat mencari, browser akan meminta izin lokasi. Koordinat dikirim ke layanan peta OpenStreetMap melalui Overpass untuk menemukan tempat di sekitarmu. Lokasi tidak disimpan permanen oleh aplikasi ini.</p>
+      </div>
+      <p id="mosqueStatus" class="mosque-status" role="status" aria-live="polite" aria-atomic="true">Tekan “Cari masjid terdekat” untuk mulai.</p>
+      <p id="mosqueAccuracy"></p>
+      <ol id="mosqueResults" class="mosque-results" aria-label="Masjid dan musala terdekat" aria-busy="false"></ol>
+      <div class="mosque-footnote">
+        <p>Jarak adalah perkiraan garis lurus, bukan jarak perjalanan. Kelengkapan data bergantung pada pemetaan komunitas; masjid yang belum muncul mungkin belum terpetakan.</p>
+        <p>Data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">kontributor OpenStreetMap</a>. Pilihan lain: <a href="https://www.google.com/maps/search/?api=1&amp;query=masjid+terdekat" target="_blank" rel="noopener noreferrer">cari di Google Maps</a>.</p>
       </div>
     </section>
 
@@ -744,6 +780,8 @@
     crossorigin="anonymous"
     defer
   ></script>
-  <script src="app.js?v=20260925-prayer1" defer></script>
+  <script src="app.js?v=20261014-mosques" defer></script>
+  <script src="mosques.js?v=20261014" defer></script>
 </body>
 </html>
+
