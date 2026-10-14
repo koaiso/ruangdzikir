@@ -9,7 +9,7 @@
 - Dzikir pagi dan petang dengan teks Arab, latin, makna ringkas, sumber, dan penghitung bacaan.
 - Bacaan setelah sholat berdasarkan Subuh, Zuhur, Asar, Maghrib, dan Isya.
 - Pengenalan huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital.
-- Masjid terdekat: masjid/musala terpetakan dalam radius 1, 3, atau 5 km, urutan jarak, dan petunjuk arah. Buka kartu Masjid Terdekat di beranda.
+- Masjid terdekat: kartu di beranda membuka pencarian masjid di Google Maps beserta pilihan petunjuk arah.
 
 ## Jalankan secara lokal
 
@@ -30,7 +30,6 @@ Buka `http://localhost:8000`. Di Windows, jika `python3` tidak tersedia, gunakan
 | `index.html` | Struktur halaman dan metadata situs |
 | `app.js` | Navigasi, data bacaan, dan logika fitur |
 | `styles.css` | Penyesuaian tampilan |
-| `mosques.js` dan `mosques.css` | Pencarian masjid terdekat dan tampilan khusus fitur |
 | `tailwind.generated.css` | CSS utilitas yang dipakai halaman |
 | `robots.txt` dan `sitemap.xml` | Petunjuk perayapan dan daftar URL untuk mesin pencari |
 
@@ -42,11 +41,7 @@ Situs tidak memerlukan akun. Izin lokasi perangkat baru diminta saat pengunjung 
 
 ## Masjid terdekat
 
-Tekan **Cari masjid terdekat** untuk meminta izin lokasi. Fitur membutuhkan HTTPS atau localhost. Koordinat dikirim ke [Overpass API](https://overpass-api.de/) untuk mencari `amenity=place_of_worship` dengan `religion=muslim` pada data © [kontributor OpenStreetMap](https://www.openstreetmap.org/copyright). Hasil digunakan ulang dari memori hingga lima menit untuk mengurangi permintaan berulang; koordinat tidak disimpan ke localStorage atau server aplikasi.
-
-Jarak dihitung sebagai garis lurus. Kelengkapan masjid/musala mengikuti data komunitas, bukan daftar semua tempat di wilayah itu. Tombol petunjuk arah membuka Google Maps. Jika lokasi ditolak atau layanan peta gagal, tautan pencarian Google Maps tetap tersedia.
-
-Layanan Overpass publik dapat sibuk dan memiliki batas penggunaan bersama. Pantau penggunaan saat trafik meningkat; gunakan penyedia khusus atau proxy dengan cache jika diperlukan. Ubah juga `connect-src` di `index.html` jika mengganti host API.
+Klik kartu **Masjid Terdekat** di beranda untuk membuka pencarian di Google Maps pada tab baru atau aplikasi Maps, sesuai perangkat. Fitur memakai Maps URL tanpa API key dan tanpa permintaan lokasi dari ruangdzikir. Lokasi, hasil pencarian, dan petunjuk arah ditangani Google Maps. Pengguna dapat mengizinkan lokasi atau mengubah area pencarian di Google Maps.
 
 ## Kontribusi
 
