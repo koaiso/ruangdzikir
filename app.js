@@ -13,7 +13,7 @@
   const SETTINGS_KEY = 'ruangdzikir:settings:v1';
   const TASBIH_KEY = 'ruangdzikir:tasbih:v1';
   const ADHKAR_KEY = 'ruangdzikir:adhkar:v1';
-  const POST_PRAYER_KEY = 'ruangdzikir:post-prayer:v1';
+  const POST_PRAYER_KEY = 'ruangdzikir:post-prayer:v2-nu';
   const KAABA = { latitude: 21.422487, longitude: 39.826206 };
   const CITY_COORDS = {
     Balikpapan: [-1.2379, 116.8529],
@@ -1007,29 +1007,8 @@
   ];
 
   const PRAYER_NAMES = { subuh: 'Subuh', zuhur: 'Zuhur', asar: 'Asar', maghrib: 'Maghrib', isya: 'Isya' };
-  // Bacaan dasar mengikuti bab "After salam" Hisn al-Muslim 66–71.
-  // Setelah Subuh dan Maghrib ada tambahan dari no. 72, dan khusus Subuh no. 73.
+  // Bacaan dasar; susunan tampil dipilih oleh postPrayerReadings di bawah.
   const POST_PRAYER_BASE = [
-    {
-      id: 'astaghfirullah', title: 'Istighfar', subtitle: 'Setelah salam', repetitions: 3,
-      arabic: 'أَسْتَغْفِرُ اللَّهَ', latin: 'Astaghfirullāh.',
-      meaning: 'Aku memohon ampun kepada Allah.',
-      source: 'Hisn al-Muslim 66 · Sahih Muslim', url: 'https://sunnah.com/hisn:66'
-    },
-    {
-      id: 'antas-salam', title: 'Allahumma Antas Salam', subtitle: 'Doa setelah istighfar', repetitions: 1,
-      arabic: 'اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ',
-      latin: 'Allāhumma antas-salām, wa minkas-salām, tabārakta yā dzal-jalāli wal-ikrām.',
-      meaning: 'Ya Allah, Engkaulah sumber keselamatan, dari-Mu datang keselamatan. Mahaberkah Engkau, Pemilik keagungan dan kemuliaan.',
-      source: 'Hisn al-Muslim 66 · Sahih Muslim', url: 'https://sunnah.com/hisn:66'
-    },
-    {
-      id: 'tahlil-doa', title: 'Tahlil dan doa', subtitle: 'Mengakui kuasa Allah', repetitions: 1,
-      arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ وَلَا مُعْطِيَ لِمَا مَنَعْتَ وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ',
-      latin: 'Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli syai’in qadīr. Allāhumma lā māni‘a limā a‘ṭait, wa lā mu‘ṭiya limā mana‘t, wa lā yanfa‘u dzal-jaddi minkal-jadd.',
-      meaning: 'Tiada Tuhan selain Allah, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan pujian. Tak seorang pun dapat menahan pemberian-Nya atau memberi apa yang Dia tahan; kekayaan dan kedudukan tak berguna tanpa pertolongan-Nya.',
-      source: 'Hisn al-Muslim 67 · Bukhari dan Muslim', url: 'https://sunnah.com/hisn:67'
-    },
     {
       id: 'subhanallah', title: 'Tasbih', subtitle: 'Maha Suci Allah', repetitions: 33,
       arabic: 'سُبْحَانَ اللَّهِ', latin: 'Subḥānallāh.', meaning: 'Maha Suci Allah.',
@@ -1044,15 +1023,7 @@
       id: 'allahu-akbar', title: 'Takbir', subtitle: 'Allah Mahabesar', repetitions: 33,
       arabic: 'اللَّهُ أَكْبَرُ', latin: 'Allāhu akbar.', meaning: 'Allah Mahabesar.',
       source: 'Hisn al-Muslim 69 · Sahih Muslim', url: 'https://sunnah.com/hisn:69'
-    },
-    {
-      id: 'tahlil-penutup', title: 'Tahlil pelengkap', subtitle: 'Melengkapi 99 bacaan', repetitions: 1,
-      arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
-      latin: 'Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu wa huwa ‘alā kulli syai’in qadīr.',
-      meaning: 'Tiada Tuhan selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan pujian, dan Dia Mahakuasa atas segala sesuatu.',
-      source: 'Hisn al-Muslim 69 · Sahih Muslim', url: 'https://sunnah.com/hisn:69'
-    },
-    { ...ADHKAR[0], source: 'Al-Baqarah 2:255 · Hisn al-Muslim 71', url: 'https://sunnah.com/hisn:71' }
+    }
   ];
 
   const POST_PRAYER_EXTRA = {
@@ -1063,27 +1034,99 @@
     source: 'Hisn al-Muslim 72 · At-Tirmidzi', url: 'https://sunnah.com/hisn:72'
   };
 
-  const POST_PRAYER_FAJR = {
-    id: 'doa-ilmu', title: 'Doa ilmu dan rezeki', subtitle: 'Khusus setelah Subuh', repetitions: 1,
-    arabic: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا',
-    latin: 'Allāhumma innī as’aluka ‘ilman nāfi‘an, wa rizqan ṭayyiban, wa ‘amalan mutaqabbalan.',
-    meaning: 'Ya Allah, aku memohon ilmu yang bermanfaat, rezeki yang baik, dan amal yang diterima.',
-    source: 'Hisn al-Muslim 73 · Ibnu Majah', url: 'https://sunnah.com/hisn:73'
-  };
+  // Pilihan ringkas dari susunan NU Online; bukan salinan wirid lengkap.
+  const POST_PRAYER_NU = [
+  {
+    "id": "istighfar-nu",
+    "title": "Istighfar",
+    "subtitle": "Setelah salam",
+    "repetitions": 3,
+    "arabic": "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ",
+    "latin": "Astaghfirullāhal-‘aẓīm.",
+    "meaning": "Aku memohon ampun kepada Allah Yang Mahaagung."
+  },
+  {
+    "id": "taubat-nu",
+    "title": "Pengakuan dan tobat",
+    "subtitle": "Lanjutan istighfar",
+    "repetitions": 1,
+    "arabic": "الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ مِنْ جَمِيعِ الْمَعَاصِي وَالذُّنُوبِ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ",
+    "latin": "Alladzī lā ilāha illā huwal-ḥayyul-qayyūm, wa atūbu ilaihi min jamī‘il-ma‘āṣī wadz-dzunūb, wa lā ḥaula wa lā quwwata illā billāhil-‘aliyyil-‘aẓīm.",
+    "meaning": "Tiada Tuhan selain Dia, Yang Mahahidup dan terus mengurus makhluk-Nya. Aku bertobat kepada-Nya dari segala maksiat dan dosa. Daya dan kekuatan hanya dengan pertolongan Allah."
+  },
+  {
+    "id": "perlindungan-neraka",
+    "title": "Perlindungan dari neraka",
+    "subtitle": "Subuh dan Maghrib",
+    "repetitions": 7,
+    "arabic": "اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ",
+    "latin": "Allāhumma ajirnī minan-nār.",
+    "meaning": "Ya Allah, lindungilah aku dari api neraka."
+  },
+  {
+    "id": "salam-nu",
+    "title": "Doa keselamatan",
+    "subtitle": "Allahumma Antas Salam",
+    "repetitions": 1,
+    "arabic": "اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ وَإِلَيْكَ يَعُودُ السَّلَامُ فَحَيِّنَا رَبَّنَا بِالسَّلَامِ وَأَدْخِلْنَا الْجَنَّةَ دَارَ السَّلَامِ تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
+    "latin": "Allāhumma antas-salām, wa minkas-salām, wa ilaika ya‘ūdus-salām. Faḥayyinā rabbanā bis-salām, wa adkhilnal-jannata dāras-salām. Tabārakta rabbanā wa ta‘ālaita yā dzal-jalāli wal-ikrām.",
+    "meaning": "Ya Allah, keselamatan berasal dari-Mu dan kembali kepada-Mu. Hidupkan kami dalam keselamatan dan masukkan kami ke surga. Mahaberkah dan Mahaluhur Engkau, Pemilik keagungan dan kemuliaan."
+  },
+  {
+    "id": "la-mania-nu",
+    "title": "Doa memohon karunia",
+    "subtitle": "Allahumma la mani‘a",
+    "repetitions": 1,
+    "arabic": "اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ وَلَا مُعْطِيَ لِمَا مَنَعْتَ وَلَا رَادَّ لِمَا قَضَيْتَ وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ",
+    "latin": "Allāhumma lā māni‘a limā a‘ṭait, wa lā mu‘ṭiya limā mana‘t, wa lā rādda limā qaḍait, wa lā yanfa‘u dzal-jaddi minkal-jadd.",
+    "meaning": "Ya Allah, tak ada yang dapat menahan pemberian-Mu, memberi apa yang Engkau tahan, atau menolak ketetapan-Mu. Kekayaan tidak dapat menyelamatkan seseorang dari-Mu."
+  },
+  {
+    "id": "ainni-nu",
+    "title": "Memohon pertolongan beribadah",
+    "subtitle": "Allahumma a‘inni",
+    "repetitions": 1,
+    "arabic": "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+    "latin": "Allāhumma a‘innī ‘alā dzikrika wa syukrika wa ḥusni ‘ibādatik.",
+    "meaning": "Ya Allah, bantulah aku mengingat-Mu, bersyukur kepada-Mu, dan beribadah dengan baik kepada-Mu."
+  },
+  {
+    "id": "fatihah-nu",
+    "title": "Al-Fatihah",
+    "subtitle": "Pembuka bacaan Al-Qur’an",
+    "repetitions": 1,
+    "arabic": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ ۝ الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ ۝ الرَّحْمَٰنِ الرَّحِيمِ ۝ مَالِكِ يَوْمِ الدِّينِ ۝ إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ ۝ اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ ۝ صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+    "latin": "Bismillāhir-raḥmānir-raḥīm. Alḥamdu lillāhi rabbil-‘ālamīn. Ar-raḥmānir-raḥīm. Māliki yaumid-dīn. Iyyāka na‘budu wa iyyāka nasta‘īn. Ihdinaṣ-ṣirāṭal-mustaqīm. Ṣirāṭalladzīna an‘amta ‘alaihim, ghairil-maghḍūbi ‘alaihim wa laḍ-ḍāllīn.",
+    "meaning": "Memuji Allah, Penguasa hari pembalasan, menyatakan ibadah dan permohonan pertolongan hanya kepada-Nya, serta memohon jalan yang lurus."
+  },
+  {
+    "id": "takbir-penutup-nu",
+    "title": "Takbir dan tahlil penutup",
+    "subtitle": "Setelah takbir 33 kali",
+    "repetitions": 1,
+    "arabic": "اللَّهُ أَكْبَرُ كَبِيرًا وَالْحَمْدُ لِلَّهِ كَثِيرًا وَسُبْحَانَ اللَّهِ بُكْرَةً وَأَصِيلًا لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ",
+    "latin": "Allāhu akbaru kabīrā, walḥamdu lillāhi katsīrā, wa subḥānallāhi bukratan wa aṣīlā. Lā ilāha illallāhu waḥdahū lā syarīka lah, lahul-mulku wa lahul-ḥamdu, yuḥyī wa yumīt, wa huwa ‘alā kulli syai’in qadīr. Wa lā ḥaula wa lā quwwata illā billāhil-‘aliyyil-‘aẓīm.",
+    "meaning": "Mengagungkan Allah, memperbanyak pujian dan tasbih, serta mengakui keesaan, kekuasaan, dan pertolongan-Nya."
+  }
+];
+  const POST_PRAYER_SOURCES = { long: "https://islam.nu.or.id/shalat/ini-susunan-dzikir-dan-wirid-sesudah-shalat-maghrib-dan-subuh-6YhCe", short: "https://www.nu.or.id/syariah/ini-susunan-dzikir-dan-wirid-setelah-shalat-zuhur-ashar-dan-isya-hm3oo" };
 
   function postPrayerReadings(prayer) {
     const extended = prayer === 'subuh' || prayer === 'maghrib';
-    const readings = POST_PRAYER_BASE.slice(0, 3);
-    if (extended) readings.push(POST_PRAYER_EXTRA);
-    readings.push(...POST_PRAYER_BASE.slice(3));
-    readings.push(...ADHKAR.slice(1, 4).map(item => ({
-      ...item,
-      repetitions: extended ? 3 : 1,
-      source: `${item.title} · Hisn al-Muslim 70`,
-      url: 'https://sunnah.com/hisn:70'
-    })));
-    if (prayer === 'subuh') readings.push(POST_PRAYER_FAJR);
-    return readings;
+    const [istighfar, taubat, protection, salam, karunia, ibadah, fatihah, closing] = POST_PRAYER_NU;
+    const readings = [istighfar, taubat];
+    if (extended) readings.push(POST_PRAYER_EXTRA, protection);
+    readings.push(salam);
+    if (extended) {
+      readings.push(fatihah, ...ADHKAR.slice(1, 4).map(item => ({ ...item, repetitions: 1 })), ADHKAR[0]);
+    } else {
+      readings.push(karunia, ibadah);
+    }
+    readings.push(...POST_PRAYER_BASE, closing);
+    return readings.map(item => ({
+      ...item, source: 'Susunan ringkas · NU Online',
+      url: extended ? POST_PRAYER_SOURCES.long : POST_PRAYER_SOURCES.short
+    }));
   }
 
   const adhkarState = {
@@ -1167,7 +1210,7 @@
         <div class="adhkar-reading"><span>Latin</span><p>${escapeHTML(reading.latin)}</p></div>
         <div class="adhkar-reading adhkar-meaning"><span>Makna ringkas</span><p>${escapeHTML(reading.meaning)}</p></div>
         <div class="adhkar-card-bottom">
-          <a href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Buka sumber ${escapeHTML(title)} di Sunnah.com">${escapeHTML(item.source)} <span aria-hidden="true">↗</span></a>
+          <a href="${item.url}" target="_blank" rel="noopener noreferrer" aria-label="Buka sumber ${escapeHTML(title)}">${escapeHTML(item.source)} <span aria-hidden="true">↗</span></a>
           <div class="adhkar-actions">
             ${count ? `<button type="button" class="adhkar-undo-btn" data-${kind}-undo="${item.id}" aria-label="Batalkan satu hitungan ${escapeHTML(title)}">Urungkan</button>` : ''}
             <button type="button" class="adhkar-count-btn" data-${kind}-count="${item.id}" ${done ? 'disabled' : ''} aria-label="${done ? 'Selesai' : 'Tandai selesai satu bacaan'}: ${escapeHTML(title)}, ${count} dari ${item.repetitions}">${done ? '✓ Selesai' : `Sudah dibaca · ${count}/${item.repetitions}`}</button>
@@ -1237,8 +1280,8 @@
     $$('.post-prayer-tab').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.prayerName === prayer)));
     $('#postPrayerLabel').textContent = `Setelah sholat ${PRAYER_NAMES[prayer]}`;
     $('#postPrayerHelper').textContent = extended
-      ? `Bacaan inti disertai tahlil 10 kali dan tiga surah pendek masing-masing 3 kali.${prayer === 'subuh' ? ' Setelah Subuh ada doa ilmu dan rezeki.' : ''}`
-      : 'Bacaan inti dengan Al-Ikhlas, Al-Falaq, dan An-Nas masing-masing satu kali.';
+      ? 'Versi ringkas NU Online: tahlil 10× dan doa perlindungan 7× sebelum doa keselamatan; bacaan Al-Qur’an sebelum tasbih, tahmid, dan takbir.'
+      : 'Versi ringkas NU Online untuk Zuhur, Asar, dan Isya, tanpa tambahan khusus Subuh/Maghrib.';
     const completed = readings.filter(item => postPrayerCount(item) === item.repetitions).length;
     $('#postPrayerProgressText').textContent = `${completed} dari ${readings.length} selesai`;
     $('#postPrayerProgressBar').style.width = `${completed / readings.length * 100}%`;
