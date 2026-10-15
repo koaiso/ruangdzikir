@@ -72,7 +72,7 @@
   </noscript>
   <link rel="stylesheet" href="tailwind.generated.css?v=20260919" />
   <link rel="stylesheet" href="styles.css?v=20261015-search-spacing" />
-  <link rel="stylesheet" href="mosque-map.css?v=20261015-map2" />
+  <link rel="stylesheet" href="mosque-map.css?v=20261015-map3" />
 
   <script type="application/ld+json">
     {
@@ -320,7 +320,7 @@
       <div class="mosque-head">
         <div class="eyebrow">Cari tempat ibadah</div>
         <h1 id="mosqueHeading">Masjid Terdekat</h1>
-        <p>Pilih kota atau tulis kecamatan dan kelurahanmu untuk melihat masjid dan musala di peta.</p>
+        <p>Gunakan lokasi perangkat untuk mencari di sekitarmu, atau pilih kota dan area secara manual.</p>
       </div>
       <div class="mosque-controls">
         <label for="mosqueCity"><span>Kota</span>
@@ -333,9 +333,10 @@
         <label for="mosqueArea"><span>Kecamatan / kelurahan (opsional)</span>
           <input id="mosqueArea" class="input-field" type="text" maxlength="80" placeholder="Contoh: Gunung Sari Ilir" autocomplete="off" />
         </label>
-        <button id="mosqueSearch" class="primary-btn" type="button">Cari masjid</button>
+        <button id="mosqueLocate" class="primary-btn mosque-locate" type="button">Gunakan lokasi saya</button>
+        <button id="mosqueSearch" class="secondary-btn" type="button">Cari manual</button>
       </div>
-      <p id="mosqueStatus" class="mosque-status" role="status" aria-live="polite">Pilih area, lalu tekan “Cari masjid”. Kata pencarian dikirim ke Google Maps saat tombol ditekan.</p>
+      <p id="mosqueStatus" class="mosque-status" role="status" aria-live="polite">Tekan “Gunakan lokasi saya” untuk meminta izin GPS. Koordinat dikirim ke Google Maps saat izin diberikan, dan tidak disimpan di Ruang Dzikir. Kamu juga bisa pilih kota dan tekan “Cari manual”.</p>
       <div id="mosqueMap" class="mosque-map" role="region" aria-label="Hasil masjid dan musala di Google Maps">
         <iframe id="mosqueFrame" title="Peta hasil pencarian masjid dan musala" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
@@ -782,7 +783,7 @@
     defer
   ></script>
   <script src="app.js?v=20261015-map1" defer></script>
-  <script src="mosque-map.js?v=20261015-map2" defer></script>
+  <script src="mosque-map.js?v=20261015-map3" defer></script>
 </body>
 </html>
 
