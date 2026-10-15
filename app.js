@@ -103,7 +103,7 @@
   }
 
   function switchView(view) {
-    if (!['home', 'quran', 'adhkar', 'post-prayer', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
+    if (!['home', 'quran', 'adhkar', 'post-prayer', 'iqro', 'asmaul', 'qibla', 'tasbih', 'mosques'].includes(view)) return;
     if (state.currentView === 'quran' && view !== 'quran') rememberVisibleAyah();
     state.currentView = view;
 
