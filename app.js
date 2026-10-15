@@ -10,6 +10,7 @@
   const DEFAULT_COUNTRY = 'Indonesia';
   const PRAYER_METHOD = 20; // Kementerian Agama Republik Indonesia (AlAdhan)
   const SURAH_CACHE_KEY = 'ruangdzikir:surahs:v2';
+  const QURAN_POSITION_KEY = 'ruangdzikir:quran:last-position:v1';
   const SETTINGS_KEY = 'ruangdzikir:settings:v1';
   const TASBIH_KEY = 'ruangdzikir:tasbih:v1';
   const ADHKAR_KEY = 'ruangdzikir:adhkar:v1';
@@ -103,6 +104,7 @@
 
   function switchView(view) {
     if (!['home', 'quran', 'adhkar', 'post-prayer', 'iqro', 'asmaul', 'qibla', 'tasbih'].includes(view)) return;
+    if (state.currentView === 'quran' && view !== 'quran') rememberVisibleAyah();
     state.currentView = view;
 
     $$('.app-view').forEach(section => {
@@ -363,7 +365,54 @@
   // Quran
   // -------------------------
 
+  let activeSurah = null;
+  let readerRequest = 0;
+  let readingScrollTimer = null;
+
+  function savedQuranPosition() {
+    const saved = loadJSON(QURAN_POSITION_KEY, null);
+    if (!saved || !Number.isInteger(saved.surah) || saved.surah < 1 || saved.surah > 114 ||
+        !Number.isInteger(saved.ayah) || saved.ayah < 1 || saved.ayah > 286) return null;
+    return saved;
+  }
+
+  function updateContinueReading() {
+    const button = $('#continueReading');
+    const saved = savedQuranPosition();
+    button.classList.toggle('hidden', !saved);
+    if (!saved) return;
+    const surah = state.surahs.find(item => Number(item.nomor) === saved.surah);
+    button.textContent = `Lanjutkan bacaan · ${sanitizeText(surah?.namaLatin, `Surah ${saved.surah}`)} ayat ${saved.ayah} →`;
+  }
+
+  function saveReadingPosition(surah, ayah) {
+    if (!Number.isInteger(surah) || !Number.isInteger(ayah) || ayah < 1) return;
+    const saved = savedQuranPosition();
+    if (saved?.surah === surah && saved.ayah === ayah) return;
+    saveJSON(QURAN_POSITION_KEY, { surah, ayah });
+    updateContinueReading();
+  }
+
+  function rememberVisibleAyah() {
+    if (state.currentView !== 'quran' || $('#surahReader').classList.contains('hidden') ||
+        $('#ayatList').classList.contains('hidden') || !activeSurah) return;
+    const cards = [...document.querySelectorAll('#ayatList .ayah-card')];
+    const boundary = Math.min(window.innerHeight * 0.45, 300);
+    const current = cards.find(card => card.getBoundingClientRect().bottom > boundary) || cards.at(-1);
+    if (current) saveReadingPosition(activeSurah, Number(current.id.slice(5)));
+  }
+
   function initQuran() {
+    updateContinueReading();
+    $('#continueReading').addEventListener('click', () => {
+      const saved = savedQuranPosition();
+      if (saved) openSurah(saved.surah, saved.ayah);
+    });
+    window.addEventListener('scroll', () => {
+      clearTimeout(readingScrollTimer);
+      readingScrollTimer = setTimeout(rememberVisibleAyah, 180);
+    }, { passive: true });
+    window.addEventListener('pagehide', rememberVisibleAyah);
     $('#surahSearch').addEventListener('input', e => filterSurahs(e.target.value));
     $('#reloadSurahs').addEventListener('click', () => loadSurahs(true));
     $('#backToSurahs').addEventListener('click', closeSurahReader);
@@ -419,6 +468,7 @@
     list.classList.remove('hidden');
     $('#surahCount').textContent = `${state.filteredSurahs.length} dari ${state.surahs.length || 114} surah`;
     $('#surahEmpty').classList.toggle('hidden', state.filteredSurahs.length !== 0);
+    updateContinueReading();
 
     list.innerHTML = state.filteredSurahs.map(s => `
       <button class="surah-card" data-surah="${Number(s.nomor)}">
@@ -434,13 +484,17 @@
     $$('[data-surah]', list).forEach(btn => btn.addEventListener('click', () => openSurah(Number(btn.dataset.surah))));
   }
 
-  async function openSurah(number) {
+  async function openSurah(number, resumeAyah = 1) {
+    if (!Number.isInteger(number) || number < 1 || number > 114) return;
+    const request = ++readerRequest;
+    activeSurah = null;
+    clearTimeout(readingScrollTimer);
     $('#surahDirectory').classList.add('hidden');
     $('#surahReader').classList.remove('hidden');
     $('#readerLoading').classList.remove('hidden');
     $('#ayatList').classList.add('hidden');
     $('#readerError').classList.add('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: resumeAyah > 1 ? 'auto' : 'smooth' });
 
     const basic = state.surahs.find(s => Number(s.nomor) === number);
     $('#readerTitle').textContent = sanitizeText(basic?.namaLatin || `Surah ${number}`, `Surah ${number}`);
@@ -449,7 +503,7 @@
     const cacheKey = `ruangdzikir:surah:${number}:v2`;
     const cached = loadJSON(cacheKey, null);
     if (cached?.data?.ayat?.length && Date.now() - cached.savedAt < 6 * 60 * 60 * 1000) {
-      renderSurahDetail(cached.data);
+      if (request === readerRequest) renderSurahDetail(cached.data, resumeAyah);
       return;
     }
 
@@ -457,8 +511,9 @@
       const res = await fetchJSON(`${API.quran}/surat/${number}`, 18000);
       if (!res.data?.ayat?.length) throw new Error('Ayat tidak tersedia.');
       try { saveJSON(cacheKey, { savedAt: Date.now(), data: res.data }); } catch (_) {}
-      renderSurahDetail(res.data);
+      if (request === readerRequest) renderSurahDetail(res.data, resumeAyah);
     } catch (err) {
+      if (request !== readerRequest) return;
       $('#readerLoading').classList.add('hidden');
       const readerError = $('#readerError');
       readerError.classList.remove('hidden');
@@ -473,7 +528,7 @@
     }
   }
 
-  function renderSurahDetail(surah) {
+  function renderSurahDetail(surah, resumeAyah = 1) {
     const safeSurah = {
       nomor: Number(surah?.nomor) || 1,
       namaLatin: sanitizeText(surah?.namaLatin, 'Surah'),
@@ -503,9 +558,27 @@
 
     $('#readerLoading').classList.add('hidden');
     ayatList.classList.remove('hidden');
+    activeSurah = safeSurah.nomor;
+    const ayah = safeSurah.ayat.some(item => Number(item.nomorAyat) === resumeAyah) ? resumeAyah : 1;
+    saveReadingPosition(activeSurah, ayah);
+    if (ayah > 1) {
+      const renderedRequest = readerRequest;
+      requestAnimationFrame(() => {
+        if (activeSurah !== safeSurah.nomor || renderedRequest !== readerRequest) return;
+        const target = document.getElementById(`ayat-${ayah}`);
+        if (target) {
+          target.style.scrollMarginTop = '8rem';
+          target.scrollIntoView({ block: 'start', behavior: 'auto' });
+        }
+      });
+    }
   }
 
   function closeSurahReader() {
+    rememberVisibleAyah();
+    ++readerRequest;
+    activeSurah = null;
+    clearTimeout(readingScrollTimer);
     $('#surahReader').classList.add('hidden');
     $('#surahDirectory').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });

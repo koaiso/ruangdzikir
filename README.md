@@ -5,7 +5,7 @@
 ## Fitur
 
 - Jadwal sholat harian dan hitung mundur menuju waktu sholat berikutnya.
-- Al-Quran: daftar surah dan bacaan ayat.
+- Al-Quran: daftar surah dan bacaan ayat. Posisi ayat terakhir otomatis tersimpan di browser; tombol **Lanjutkan bacaan** muncul di daftar surah.
 - Dzikir pagi dan petang dengan teks Arab, latin, makna ringkas, sumber, dan penghitung bacaan.
 - Bacaan setelah sholat: pilihan ringkas susunan NU Online. Subuh/Maghrib memuat tambahan; Zuhur/Asar/Isya lebih singkat. Ini bukan wirid lengkap atau satu-satunya amalan di Indonesia.
 - Pengenalan huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital.
@@ -37,7 +37,7 @@ Buka `http://localhost:8000`. Di Windows, jika `python3` tidak tersedia, gunakan
 
 Data Al-Quran diambil dari [EQuran.id](https://equran.id/) dan jadwal sholat dari [AlAdhan](https://aladhan.com/). Sumber dzikir dicantumkan pada masing-masing bacaan di dalam aplikasi.
 
-Situs tidak memerlukan akun. Izin lokasi perangkat baru diminta saat pengunjung memilih fitur yang memerlukannya; lokasi juga dapat dipilih lewat kota. Beberapa preferensi penggunaan disimpan di browser melalui `localStorage`. Fitur yang mengambil data dari API memerlukan koneksi internet.
+Situs tidak memerlukan akun. Izin lokasi perangkat baru diminta saat pengunjung memilih fitur yang memerlukannya; lokasi juga dapat dipilih lewat kota. Beberapa preferensi dan posisi terakhir membaca Al-Quran disimpan di browser melalui `localStorage` (hanya di perangkat/browser tersebut). Fitur yang mengambil data dari API memerlukan koneksi internet.
 
 ## Masjid terdekat
 
