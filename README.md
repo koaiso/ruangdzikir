@@ -9,7 +9,7 @@
 - Dzikir pagi dan petang dengan teks Arab, latin, makna ringkas, sumber, dan penghitung bacaan.
 - Bacaan setelah sholat: pilihan ringkas susunan NU Online. Subuh/Maghrib memuat tambahan; Zuhur/Asar/Isya lebih singkat. Ini bukan wirid lengkap atau satu-satunya amalan di Indonesia.
 - Pengenalan huruf hijaiyah, Asmaul Husna, arah kiblat, dan tasbih digital.
-- Masjid terdekat: kartu di beranda membuka pencarian masjid di Google Maps beserta pilihan petunjuk arah.
+- Masjid terdekat: peta interaktif, pencarian berdasarkan area peta/kota, radius 1–5 km, daftar hasil, dan petunjuk arah.
 
 ## Jalankan secara lokal
 
@@ -29,6 +29,7 @@ Buka `http://localhost:8000`. Di Windows, jika `python3` tidak tersedia, gunakan
 | --- | --- |
 | `index.html` | Struktur halaman dan metadata situs |
 | `app.js` | Navigasi, data bacaan, dan logika fitur |
+| `mosque-map.js` dan `mosque-map.css` | Peta dan pencarian masjid/musala |
 | `styles.css` | Penyesuaian tampilan |
 | `tailwind.generated.css` | CSS utilitas yang dipakai halaman |
 | `robots.txt` dan `sitemap.xml` | Petunjuk perayapan dan daftar URL untuk mesin pencari |
@@ -37,11 +38,13 @@ Buka `http://localhost:8000`. Di Windows, jika `python3` tidak tersedia, gunakan
 
 Data Al-Quran diambil dari [EQuran.id](https://equran.id/) dan jadwal sholat dari [AlAdhan](https://aladhan.com/). Sumber dzikir dicantumkan pada masing-masing bacaan di dalam aplikasi.
 
-Situs tidak memerlukan akun. Izin lokasi perangkat baru diminta saat pengunjung memilih fitur yang memerlukannya; lokasi juga dapat dipilih lewat kota. Beberapa preferensi dan posisi terakhir membaca Al-Quran disimpan di browser melalui `localStorage` (hanya di perangkat/browser tersebut). Fitur yang mengambil data dari API memerlukan koneksi internet.
+Situs tidak memerlukan akun. Fitur masjid tidak meminta lokasi perangkat; pengunjung memilih kota atau menggeser peta. Beberapa preferensi dan posisi terakhir membaca Al-Quran disimpan di browser melalui `localStorage` (hanya di perangkat/browser tersebut). Fitur yang mengambil data dari API memerlukan koneksi internet.
 
 ## Masjid terdekat
 
-Klik kartu **Masjid Terdekat** di beranda untuk membuka pencarian di Google Maps pada tab baru atau aplikasi Maps, sesuai perangkat. Fitur memakai Maps URL tanpa API key dan tanpa permintaan lokasi dari ruangdzikir. Lokasi, hasil pencarian, dan petunjuk arah ditangani Google Maps. Pengguna dapat mengizinkan lokasi atau mengubah area pencarian di Google Maps.
+Klik kartu **Masjid Terdekat** untuk membuka peta. Pilih kota atau geser peta, tentukan radius, lalu tekan **Cari di area peta**. Pencarian tidak meminta GPS perangkat. Pusat area peta pilihan pengunjung dikirim ke Overpass hanya setelah tombol cari ditekan. Hasil dari [Overpass API](https://wiki.openstreetmap.org/wiki/Overpass_API) menampilkan tempat ibadah dengan tag OpenStreetMap `amenity=place_of_worship` dan `religion=muslim`; hasil disimpan sementara di memori halaman untuk mengurangi permintaan berulang. Peta menggunakan Leaflet dan ubin © kontributor OpenStreetMap.
+
+Layanan Overpass dan ubin peta bersifat publik dengan batas pemakaian dan ketersediaan tanpa jaminan. Permintaan baru hanya terjadi setelah tombol cari ditekan, diberi cache 10 menit untuk area yang sama, dan berhenti 30 detik saat ditolak 406/429. Data yang belum dipetakan tidak akan muncul. Tautan Google Maps tersedia sebagai alternatif bila layanan data sedang sibuk. Bila pengunjung meningkat, gunakan layanan peta yang sesuai kapasitas dan kebijakan pemakaian.
 
 ## Kontribusi
 

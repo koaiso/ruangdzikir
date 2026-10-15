@@ -16,7 +16,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta
     http-equiv="Content-Security-Policy"
-    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com; script-src 'self' 'unsafe-inline' https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;"
+    content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://equran.id https://api.aladhan.com https://overpass-api.de; script-src 'self' 'unsafe-inline' https://unpkg.com; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;"
   />
   <meta name="color-scheme" content="dark" />
   <meta name="supported-color-schemes" content="dark" />
@@ -72,6 +72,8 @@
   </noscript>
   <link rel="stylesheet" href="tailwind.generated.css?v=20260919" />
   <link rel="stylesheet" href="styles.css?v=20261015-search-spacing" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="mosque-map.css?v=20261015" />
 
   <script type="application/ld+json">
     {
@@ -304,14 +306,49 @@
           <span class="feature-copy">Counter dzikir minimalis dengan target otomatis dan getar ringan di ponsel.</span>
           <span class="feature-action">Mulai berdzikir <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
         </button>
-        <a class="feature-card text-left" href="https://www.google.com/maps/search/?api=1&amp;query=masjid+terdekat" target="_blank" rel="noopener noreferrer" aria-label="Cari masjid terdekat di Google Maps (tab baru)">
+        <button class="feature-card text-left" data-view-target="mosques" type="button">
           <span class="feature-icon"><i data-lucide="map-pin" class="h-5 w-5"></i></span>
           <span class="feature-title">Masjid Terdekat</span>
-          <span class="feature-copy">Temukan masjid di sekitarmu dan petunjuk arah langsung melalui Google Maps.</span>
-          <span class="feature-action">Cari di Google Maps <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
-        </a>
+          <span class="feature-copy">Jelajahi peta, cari masjid dan musala di sekitarmu, lalu buka petunjuk arah.</span>
+          <span class="feature-action">Jelajahi peta <i data-lucide="arrow-up-right" class="h-3.5 w-3.5"></i></span>
+        </button>
 
       </div>
+    </section>
+
+    <section id="view-mosques" class="app-view hidden" data-view="mosques" aria-labelledby="mosqueHeading">
+      <button class="secondary-btn" type="button" data-view-target="home">Kembali ke beranda</button>
+      <div class="mosque-head">
+        <div class="eyebrow">Di sekitarmu</div>
+        <h1 id="mosqueHeading">Masjid Terdekat</h1>
+        <p>Jelajahi peta dan pilih kota. Geser peta untuk mencari area lain.</p>
+      </div>
+      <div class="mosque-controls">
+        <label for="mosqueCity"><span>Kota awal</span>
+          <select id="mosqueCity" class="input-field">
+            <option>Balikpapan</option><option>Jakarta</option><option>Samarinda</option><option>Surabaya</option>
+            <option>Bandung</option><option>Yogyakarta</option><option>Semarang</option><option>Medan</option>
+            <option>Makassar</option><option>Palembang</option><option>Banjarmasin</option><option>Denpasar</option>
+          </select>
+        </label>
+        <label for="mosqueRadius"><span>Radius pencarian</span>
+          <select id="mosqueRadius" class="input-field">
+            <option value="1000">1 km</option><option value="2000" selected>2 km</option>
+            <option value="3000">3 km</option><option value="5000">5 km</option>
+          </select>
+        </label>
+        <button id="mosqueSearch" class="primary-btn" type="button">Cari di area peta</button>
+      </div>
+      <p id="mosqueStatus" class="mosque-status" role="status" aria-live="polite">Pilih kota atau geser peta. Pusat area peta dikirim ke Overpass hanya saat kamu menekan “Cari di area peta”.</p>
+      <div id="mosqueMap" class="mosque-map" role="region" aria-label="Peta masjid dan musala"></div>
+      <div class="mosque-results-head">
+        <h2>Hasil pencarian</h2>
+        <select id="mosqueFilter" class="input-field" aria-label="Saring hasil masjid dan musala">
+          <option value="semua">Semua</option><option value="masjid">Masjid</option><option value="musala">Musala</option>
+        </select>
+      </div>
+      <ol id="mosqueList" class="mosque-list" aria-label="Masjid dan musala terdekat"></ol>
+      <p class="mosque-note">Jarak dihitung lurus dari pusat pencarian. Kelengkapan data mengikuti OpenStreetMap; jenis masjid/musala diperkirakan dari label tempat. Data dan peta © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">kontributor OpenStreetMap</a>. Jika pencarian belum tersedia, <a href="https://www.google.com/maps/search/?api=1&amp;query=masjid+terdekat" target="_blank" rel="noopener noreferrer">cari melalui Google Maps</a>.</p>
     </section>
 
     <section id="view-adhkar" class="app-view hidden" data-view="adhkar">
@@ -753,7 +790,9 @@
     crossorigin="anonymous"
     defer
   ></script>
-  <script src="app.js?v=20261015-resume1" defer></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="app.js?v=20261015-map1" defer></script>
+  <script src="mosque-map.js?v=20261015" defer></script>
 </body>
 </html>
 
