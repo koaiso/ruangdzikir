@@ -7,6 +7,8 @@
 .mosque-controls label span { display: block; margin-bottom: 7px; }
 .mosque-controls input, .mosque-controls select { min-height: 42px; width: 100%; }
 .mosque-controls button { min-height: 42px; white-space: nowrap; }
+.mosque-controls button:disabled { opacity: .6; cursor: wait; }
+.mosque-controls .mosque-locate { font-weight: 700; }
 .mosque-status { min-height: 26px; margin: 14px 1px 12px; color: #a1a1aa; font-size: 13px; line-height: 1.6; }
 .mosque-map { height: clamp(360px, 58vw, 560px); overflow: hidden; border: 1px solid #303035; border-radius: 20px; background: #242429; }
 .mosque-map iframe { display: block; width: 100%; height: 100%; border: 0; }
